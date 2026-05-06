@@ -1,8 +1,7 @@
-package com.example.gyme.ui.theme
+package com.example.gyme.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Gyme Brand Colors
 val GymePrimary        = Color(0xFF4ECBA0)
 val GymePrimaryLight   = Color(0xFFA8E6CF)
 val GymeBackground     = Color(0xFF081520)

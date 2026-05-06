@@ -1,4 +1,4 @@
-package com.example.gyme.ui.theme
+package com.example.gyme.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
