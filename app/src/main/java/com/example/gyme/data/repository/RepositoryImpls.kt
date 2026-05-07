@@ -7,12 +7,29 @@ import com.example.gyme.domain.model.*
 import com.example.gyme.domain.repository.*
 import com.example.gyme.util.ApiResult
 import com.example.gyme.util.safeApiCall
+import java.text.SimpleDateFormat
+import java.util.*
 
+// ── Mappers ───────────────────────────────────────────────────────────────────
+
+private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+private fun String.toDate(): Date = try {
+    apiDateFormat.parse(this) ?: Date()
+} catch (e: Exception) {
+    Date()
+}
+
+private fun Date.toApiString(): String = apiDateFormat.format(this)
 
 private fun MemberDto.toDomain() = Member(
-    id = id ?: "", name = name, phone = phone,
-    subscriptionStart = subscriptionStart, subscriptionEnd = subscriptionEnd,
-    status = status, createdAt = createdAt ?: ""
+    id = id ?: "", 
+    name = name, 
+    phone = phone,
+    subscriptionStart = subscriptionStart.toDate(), 
+    subscriptionEnd = subscriptionEnd.takeIf { it.isNotBlank() }?.toDate(),
+    status = try { MemberStatus.valueOf(status.uppercase()) } catch (e: Exception) { MemberStatus.ACTIVE },
+    createdAt = createdAt ?: ""
 )
 
 private fun UserDto.toDomain() = User(
@@ -37,8 +54,14 @@ private fun TransactionDto.toDomain() = Transaction(
 )
 
 private fun NotificationDto.toDomain() = Notification(
-    id = id ?: "", userId = userId, title = title, message = message,
-    isRead = isRead, reminderDays = reminderDays, followUpDays = followUpDays,
+    id = id ?: "", 
+    userId = userId, 
+    title = title, 
+    message = message,
+    type = try { NotificationType.valueOf(type?.uppercase() ?: "SYSTEM") } catch (e: Exception) { NotificationType.SYSTEM },
+    isRead = isRead, 
+    reminderDays = reminderDays, 
+    followUpDays = followUpDays,
     createdAt = createdAt ?: ""
 )
 
@@ -46,6 +69,7 @@ private fun SettingsDto.toDomain() = Settings(
     id = id ?: "", gymName = gymName, billingAddress = billingAddress, language = language
 )
 
+// ── MembersRepositoryImpl ─────────────────────────────────────────────────────
 
 class MembersRepositoryImpl : MembersRepository {
     private val api = NetworkModule.create(MembersApi::class.java)
@@ -63,6 +87,7 @@ class MembersRepositoryImpl : MembersRepository {
     override suspend fun delete(id: String) = safeApiCall { api.delete("eq.$id") }
 }
 
+// ── UsersRepositoryImpl ───────────────────────────────────────────────────────
 
 class UsersRepositoryImpl : UsersRepository {
     private val api = NetworkModule.create(UsersApi::class.java)
@@ -83,6 +108,7 @@ class UsersRepositoryImpl : UsersRepository {
     override suspend fun delete(id: String) = safeApiCall { api.delete("eq.$id") }
 }
 
+// ── AttendanceRepositoryImpl ──────────────────────────────────────────────────
 
 class AttendanceRepositoryImpl : AttendanceRepository {
     private val api = NetworkModule.create(AttendanceApi::class.java)
@@ -97,6 +123,7 @@ class AttendanceRepositoryImpl : AttendanceRepository {
     override suspend fun delete(id: String) = safeApiCall { api.delete("eq.$id") }
 }
 
+// ── TransactionsRepositoryImpl ────────────────────────────────────────────────
 
 class TransactionsRepositoryImpl : TransactionsRepository {
     private val api = NetworkModule.create(TransactionsApi::class.java)
@@ -114,6 +141,7 @@ class TransactionsRepositoryImpl : TransactionsRepository {
     override suspend fun delete(id: String) = safeApiCall { api.delete("eq.$id") }
 }
 
+// ── NotificationsRepositoryImpl ───────────────────────────────────────────────
 
 class NotificationsRepositoryImpl : NotificationsRepository {
     private val api = NetworkModule.create(NotificationsApi::class.java)
@@ -131,6 +159,7 @@ class NotificationsRepositoryImpl : NotificationsRepository {
     override suspend fun delete(id: String) = safeApiCall { api.delete("eq.$id") }
 }
 
+// ── SettingsRepositoryImpl ────────────────────────────────────────────────────
 
 class SettingsRepositoryImpl : SettingsRepository {
     private val api = NetworkModule.create(SettingsApi::class.java)
@@ -145,6 +174,8 @@ class SettingsRepositoryImpl : SettingsRepository {
         api.update("eq.$id", UpsertSettingsRequest(gymName, billingAddress, language)).first().toDomain()
     }
 }
+
+// ── AuthRepositoryImpl ────────────────────────────────────────────────────────
 
 class AuthRepositoryImpl : AuthRepository {
 

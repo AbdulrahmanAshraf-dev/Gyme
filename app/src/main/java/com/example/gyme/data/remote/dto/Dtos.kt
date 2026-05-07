@@ -100,6 +100,7 @@ data class NotificationDto(
     @SerializedName("user_id")        val userId: String    = "",
     @SerializedName("title")          val title: String     = "",
     @SerializedName("message")        val message: String   = "",
+    @SerializedName("type")           val type: String?     = null,
     @SerializedName("is_read")        val isRead: Boolean   = false,
     @SerializedName("reminder_days")  val reminderDays: Int = 0,
     @SerializedName("follow_up_days") val followUpDays: Int = 0,
@@ -110,6 +111,7 @@ data class CreateNotificationRequest(
     @SerializedName("user_id")        val userId: String,
     @SerializedName("title")          val title: String,
     @SerializedName("message")        val message: String,
+    @SerializedName("type")           val type: String      = "system",
     @SerializedName("is_read")        val isRead: Boolean   = false,
     @SerializedName("reminder_days")  val reminderDays: Int = 0,
     @SerializedName("follow_up_days") val followUpDays: Int = 0
