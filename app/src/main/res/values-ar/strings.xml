@@ -1,0 +1,53 @@
+<resources>
+    <!-- General -->
+    <string name="app_name">جايم</string>
+    <string name="back">عودة</string>
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
+    <string name="loading">جاري التحميل...</string>
+    <string name="error">حدث خطأ ما</string>
+    <string name="retry">إعادة المحاولة</string>
+
+    <!-- Bottom Nav -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_members">الأعضاء</string>
+    <string name="nav_attendance">الحضور</string>
+    <string name="nav_finance">المالية</string>
+    <string name="nav_more">المزيد</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">نظرة عامة</string>
+    <string name="dashboard_greeting">صباح الخير،\n%1$s</string>
+    <string name="new_member">عضو جديد</string>
+    <string name="scan_id">مسح الهوية</string>
+    <string name="today_revenue">دخل اليوم</string>
+    <string name="currently_active">نشط حالياً</string>
+    <string name="member_status">حالة الأعضاء</string>
+    <string name="view_all">عرض الكل</string>
+
+    <!-- Settings -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="language_settings">إعدادات اللغة</string>
+    <string name="select_language">اختر اللغة</string>
+    <string name="english">الإنجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="appearance">المظهر</string>
+    <string name="dark_mode">الوضع الداكن</string>
+    <string name="notifications">مركز التنبيهات</string>
+    <string name="staff_management">إدارة الموظفين</string>
+    <string name="help_support">المساعدة والدعم</string>
+    <string name="logout">تسجيل الخروج</string>
+
+    <!-- Attendance -->
+    <string name="scan_qr_instruction">وجه الكاميرا نحو رمز QR الخاص بالعضو</string>
+    <string name="scan_qr_frame_hint">تأكد من وجود الرمز داخل الإطار الأخضر</string>
+    <string name="manual_entry">إدخال يدوي</string>
+    <string name="checkin_success">تم تسجيل الدخول بنجاح</string>
+    <string name="welcome_back">مرحباً بعودتك، %1$s!</string>
+    <string name="subscription_expired">الاشتراك منتهي</string>
+    <string name="renewal_required">يجب على العضو التجديد في مكتب الاستقبال.</string>
+
+    <!-- Empty States -->
+    <string name="caught_up_title">أنت على اطلاع بكل شيء</string>
+    <string name="caught_up_subtitle">لا توجد تنبيهات جديدة لعرضها الآن.\nاستمتع بسير عملك المركز.</string>
+</resources>

@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gyme.feature.login.LoginScreen
 import com.example.gyme.feature.onboarding.OnboardingScreen
 import com.example.gyme.feature.members.add.AddMemberScreen
@@ -19,6 +21,9 @@ import com.example.gyme.feature.attendance.AttendanceScreen
 import com.example.gyme.feature.attendance.AttendanceViewModel
 import com.example.gyme.feature.notifications.NotificationsScreen
 import com.example.gyme.feature.notifications.NotificationsViewModel
+import com.example.gyme.feature.more.MoreScreen
+import com.example.gyme.feature.staff.StaffScreen
+import com.example.gyme.feature.staff.StaffViewModel
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -135,7 +140,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.More.route) {
-            com.example.gyme.feature.staff.StaffScreen(
+            MoreScreen(
                 onNavigateToHome = {
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
@@ -143,6 +148,49 @@ fun NavGraph(navController: NavHostController) {
                 },
                 onNavigateToMembers = {
                     navController.navigate(Screen.Members.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToAttendance = {
+                    navController.navigate(Screen.Attendance.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToFinance = {
+                    navController.navigate(Screen.Finance.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToStaff = {
+                    navController.navigate(Screen.StaffManagement.route)
+                },
+                onNavigateToNotifications = {
+                    navController.navigate(Screen.Notifications.route)
+                }
+            )
+        }
+
+        composable(Screen.StaffManagement.route) {
+            val viewModel: StaffViewModel = viewModel()
+
+            StaffScreen(
+                viewModel = viewModel,
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                },
+                onNavigateToMembers = {
+                    navController.navigate(Screen.Members.route) {
+                        popUpTo(Screen.Home.route) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToAttendance = {
+                    navController.navigate(Screen.Attendance.route) {
                         popUpTo(Screen.Home.route) { inclusive = false }
                         launchSingleTop = true
                     }
