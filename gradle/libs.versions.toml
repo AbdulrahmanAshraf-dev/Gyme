@@ -15,8 +15,11 @@ navigationComposeVersion = "2.9.8"
 camerax = "1.4.0"
 barcode-scanning = "17.3.0"
 guava = "33.3.1-android"
+datastore = "1.1.2"
 
 [libraries]
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.0" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
