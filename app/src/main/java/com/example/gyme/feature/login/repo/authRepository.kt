@@ -1,4 +1,4 @@
-package com.example.gyme.util
+package com.example.gyme.feature.login.repo
 
 import com.example.gyme.feature.members.model.*
 import com.example.gyme.feature.staff.model.*
@@ -7,15 +7,10 @@ import com.example.gyme.feature.finance.model.*
 import com.example.gyme.feature.notifications.model.*
 import com.example.gyme.feature.more.model.*
 import com.example.gyme.feature.home.model.*
+import com.example.gyme.util.ApiResult
 
-
-object SessionManager {
-    var currentUser: User? = null
-
-    fun isLoggedIn(): Boolean = currentUser != null
-
-    fun clear() {
-        currentUser = null
-    }
+interface AuthRepository {
+    suspend fun signIn(email: String, password: String): ApiResult<User>
+    suspend fun signUp(email: String, password: String): ApiResult<User>
 }
 

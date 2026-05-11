@@ -16,6 +16,7 @@ barcode-scanning = "17.3.0"
 guava = "33.6.0-android"
 datastore = "1.2.1"
 supabase = "3.6.0"
+ktor = "3.0.0"
 
 [libraries]
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
@@ -49,7 +50,11 @@ mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning"
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 supabase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabase" }
 supabase-postgrest = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
-supabase-gotrue = { group = "io.github.jan-tennert.supabase", name = "gotrue-kt" }
+supabase-gotrue = { group = "io.github.jan-tennert.supabase", name = "auth-kt" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.8.0" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

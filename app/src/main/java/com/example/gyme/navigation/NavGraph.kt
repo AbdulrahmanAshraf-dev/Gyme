@@ -1,29 +1,36 @@
 package com.example.gyme.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.gyme.feature.login.LoginScreen
-import com.example.gyme.feature.onboarding.OnboardingScreen
-import com.example.gyme.feature.members.add.AddMemberScreen
-import com.example.gyme.feature.members.add.AddMemberViewModel
-import com.example.gyme.feature.members.update.UpdateMemberScreen
-import com.example.gyme.feature.members.update.UpdateMemberViewModel
-import com.example.gyme.domain.usecase.*
-import com.example.gyme.data.repository.*
-import com.example.gyme.feature.attendance.AttendanceScreen
-import com.example.gyme.feature.attendance.AttendanceViewModel
-import com.example.gyme.feature.notifications.NotificationsScreen
-import com.example.gyme.feature.notifications.NotificationsViewModel
-import com.example.gyme.feature.more.MoreScreen
-import com.example.gyme.feature.staff.StaffScreen
-import com.example.gyme.feature.staff.StaffViewModel
+import com.example.gyme.feature.login.view.LoginScreen
+import com.example.gyme.feature.onboarding.view.OnboardingScreen
+import com.example.gyme.feature.members.add.view.AddMemberScreen
+import com.example.gyme.feature.members.add.viewModel.AddMemberViewModel
+import com.example.gyme.feature.members.update.view.UpdateMemberScreen
+import com.example.gyme.feature.members.update.viewModel.UpdateMemberViewModel
+import com.example.gyme.feature.members.usecase.*
+import com.example.gyme.feature.attendance.usecase.*
+import com.example.gyme.feature.home.usecase.*
+import com.example.gyme.feature.finance.usecase.*
+import com.example.gyme.feature.members.repo.*
+import com.example.gyme.feature.finance.repo.*
+import com.example.gyme.feature.attendance.repo.*
+import com.example.gyme.feature.notifications.repo.*
+import com.example.gyme.feature.staff.repo.*
+import com.example.gyme.feature.more.repo.*
+import com.example.gyme.feature.members.repo.*
+import com.example.gyme.feature.finance.repo.*
+import com.example.gyme.feature.attendance.view.AttendanceScreen
+import com.example.gyme.feature.attendance.viewModel.AttendanceViewModel
+import com.example.gyme.feature.notifications.viewModel.NotificationsViewModel
+import com.example.gyme.feature.more.view.MoreScreen
+import com.example.gyme.feature.staff.view.StaffScreen
+import com.example.gyme.feature.staff.viewModel.StaffViewModel
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -52,7 +59,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Home.route) {
-            com.example.gyme.feature.home.HomeScreen(
+            com.example.gyme.feature.home.view.HomeScreen(
                 onNavigateToMembers = {
                     navController.navigate(Screen.Members.route) {
                         popUpTo(Screen.Home.route) { inclusive = false }
@@ -84,7 +91,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Members.route) {
-            com.example.gyme.feature.members.MembersScreen(
+            com.example.gyme.feature.members.view.MembersScreen(
                 onNavigateToHome = {
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
@@ -118,7 +125,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Finance.route) {
-            com.example.gyme.feature.finance.FinanceScreen(
+            com.example.gyme.feature.finance.view.FinanceScreen(
                 onNavigateToHome = {
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
@@ -205,9 +212,9 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.AddMember.route) {
-            val repository = MemberRepositoryImpl()
+            val repository = MembersRepositoryImpl()
             val addMemberUseCase = AddMemberUseCase(repository)
-            val getPlansUseCase = GetMembershipPlansUseCase(repository)
+            val getPlansUseCase = GetMembershipPlansUseCase()
             val viewModel = AddMemberViewModel(addMemberUseCase, getPlansUseCase)
             
             AddMemberScreen(
@@ -223,13 +230,13 @@ fun NavGraph(navController: NavHostController) {
             arguments = listOf(navArgument("memberId") { type = NavType.StringType })
         ) { backStackEntry ->
             val memberId = backStackEntry.arguments?.getString("memberId") ?: ""
-            val repository = MemberRepositoryImpl()
+            val repository = MembersRepositoryImpl()
             
             val viewModel = UpdateMemberViewModel(
                 memberId = memberId,
                 getMemberDetails = GetMemberDetailsUseCase(repository),
-                getMemberPaymentHistory = GetMemberPaymentHistoryUseCase(repository),
-                getMembershipPlans = GetMembershipPlansUseCase(repository),
+                getMemberPaymentHistory = GetMemberPaymentHistoryUseCase(TransactionsRepositoryImpl()),
+                getMembershipPlans = GetMembershipPlansUseCase(),
                 updateMember = UpdateMemberUseCase(repository)
             )
             
@@ -279,7 +286,7 @@ fun NavGraph(navController: NavHostController) {
             val repository = NotificationsRepositoryImpl()
             val viewModel = NotificationsViewModel(repository)
 
-            com.example.gyme.feature.notifications.NotificationsScreen(
+            com.example.gyme.feature.notifications.view.NotificationsScreen(
                 viewModel = viewModel,
                 onNavigateToHome = {
                     navController.navigate(Screen.Home.route) {
@@ -317,3 +324,7 @@ fun NavGraph(navController: NavHostController) {
         }
     }
 }
+
+
+
+
