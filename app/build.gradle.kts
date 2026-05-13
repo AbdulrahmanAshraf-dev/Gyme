@@ -3,14 +3,15 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.example.gyme"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
+    compileSdk = 36
+
+    kotlin {
+        jvmToolchain(17)
     }
 
     defaultConfig {
@@ -39,8 +40,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose      = true
@@ -61,10 +62,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
@@ -74,7 +71,9 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.postgrest)
-    implementation(libs.supabase.gotrue)
+    implementation(libs.supabase.auth)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

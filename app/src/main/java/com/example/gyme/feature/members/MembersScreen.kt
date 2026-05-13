@@ -18,15 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.gyme.domain.model.MemberStats
-import com.example.gyme.domain.model.MemberSummary
-import com.example.gyme.domain.model.MemberStatus
+import com.example.gyme.core.model.MemberStats
+import com.example.gyme.core.model.MemberSummary
 import com.example.gyme.theme.*
 
 import com.example.gyme.core.ui.GymeBottomNavigation
@@ -276,15 +273,16 @@ fun MemberListItem(member: MemberSummary, onMenuClicked: (String) -> Unit, onMem
 }
 
 @Composable
-fun StatusBadge(status: MemberStatus) {
-    val (bgColor, textColor, text) = when (status) {
-        MemberStatus.ACTIVE -> Triple(GymePrimaryLight, GymePrimary, "ACTIVE")
-        MemberStatus.PENDING -> Triple(GymePendingBg, GymePendingText, "PENDING")
-        MemberStatus.EXPIRED -> Triple(GymeExpiredBg, GymeExpiredText, "EXPIRED")
+fun StatusBadge(status: String?) {
+    val (bgColor, textColor, label) = when (status?.lowercase()) {
+        "active" -> Triple(GymePrimaryLight, GymePrimary, "ACTIVE")
+        "pending" -> Triple(GymePendingBg, GymePendingText, "PENDING")
+        "expired" -> Triple(GymeExpiredBg, GymeExpiredText, "EXPIRED")
+        else -> Triple(Color.LightGray, Color.DarkGray, status?.uppercase() ?: "UNKNOWN")
     }
     Surface(shape = RoundedCornerShape(16.dp), color = bgColor) {
         Text(
-            text,
+            label,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,

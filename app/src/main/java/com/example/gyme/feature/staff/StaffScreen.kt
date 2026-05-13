@@ -21,8 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.gyme.domain.model.StaffStats
-import com.example.gyme.domain.model.StaffMember
+import com.example.gyme.core.model.StaffStats
+import com.example.gyme.core.model.StaffMember
 import com.example.gyme.theme.*
 
 import com.example.gyme.core.ui.GymeBottomNavigation

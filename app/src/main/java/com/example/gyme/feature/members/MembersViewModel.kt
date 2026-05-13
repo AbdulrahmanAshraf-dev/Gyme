@@ -2,10 +2,8 @@ package com.example.gyme.feature.members
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gyme.domain.model.MemberStats
-import com.example.gyme.domain.model.MemberSummary
-import com.example.gyme.domain.model.MemberStatus
-import kotlinx.coroutines.delay
+import com.example.gyme.core.model.*
+import com.example.gyme.util.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +19,9 @@ sealed class MembersUiState {
     data class Error(val message: String) : MembersUiState()
 }
 
-class MembersViewModel : ViewModel() {
+class MembersViewModel(
+    private val repository: MembersRepository = MembersRepository()
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<MembersUiState>(MembersUiState.Loading)
     val uiState: StateFlow<MembersUiState> = _uiState.asStateFlow()
@@ -33,47 +33,31 @@ class MembersViewModel : ViewModel() {
     private fun loadMembersData() {
         viewModelScope.launch {
             _uiState.value = MembersUiState.Loading
-            delay(800)
             
-            val dummyStats = MemberStats(
-                totalActive = 1248,
-                activeGrowth = "↑ 12%",
-                pendingActivation = 34,
-                recentlyExpired = 18
-            )
-
-            val dummyMembers = listOf(
-                MemberSummary(
-                    id = "1",
-                    name = "Elena Rodriguez",
-                    plan = "Premium Unlimited",
-                    status = MemberStatus.ACTIVE,
-                    initials = "ER"
-                ),
-                MemberSummary(
-                    id = "2",
-                    name = "Marcus King",
-                    plan = "Standard Pass",
-                    status = MemberStatus.PENDING,
-                    initials = "MK"
-                ),
-                MemberSummary(
-                    id = "3",
-                    name = "David Palmer",
-                    plan = "Basic Access",
-                    status = MemberStatus.EXPIRED,
-                    initials = "DP"
-                ),
-                MemberSummary(
-                    id = "4",
-                    name = "Sophia Lin",
-                    plan = "Premium Unlimited",
-                    status = MemberStatus.ACTIVE,
-                    initials = "SL"
+            val result = repository.getAll()
+            if (result is ApiResult.Success) {
+                val members = result.data
+                val summaries = members.map { 
+                    MemberSummary(
+                        id = it.id,
+                        name = it.name,
+                        plan = it.planId ?: "",
+                        status = it.status,
+                        initials = it.name.take(2).uppercase()
+                    )
+                }
+                
+                val stats = MemberStats(
+                    totalActive = members.count { it.status == "active" },
+                    activeGrowth = "",
+                    pendingActivation = members.count { it.status == "pending" },
+                    recentlyExpired = members.count { it.status == "expired" }
                 )
-            )
-
-            _uiState.value = MembersUiState.Success(dummyStats, dummyMembers)
+                
+                _uiState.value = MembersUiState.Success(stats, summaries)
+            } else {
+                _uiState.value = MembersUiState.Error("Failed to load members")
+            }
         }
     }
 

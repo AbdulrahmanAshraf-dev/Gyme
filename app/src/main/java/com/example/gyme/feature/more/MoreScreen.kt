@@ -26,6 +26,7 @@ import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab
 import com.example.gyme.theme.*
 import com.example.gyme.util.LanguageManager
+import com.example.gyme.util.SessionManager
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,7 +36,9 @@ fun MoreScreen(
     onNavigateToAttendance: () -> Unit,
     onNavigateToFinance: () -> Unit,
     onNavigateToStaff: () -> Unit,
-    onNavigateToNotifications: () -> Unit
+    onNavigateToPlans: () -> Unit,
+    onNavigateToNotifications: () -> Unit,
+    onLogout: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -65,17 +68,51 @@ fun MoreScreen(
         ) {
             item { Spacer(modifier = Modifier.height(24.dp)) }
             item { MoreHeader(onNavigateToNotifications) }
-            item { Spacer(modifier = Modifier.height(32.dp)) }
-            item { 
-                Text(
-                    text = stringResource(R.string.nav_more),
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = GymeTextPrimary
-                )
-            }
             item { Spacer(modifier = Modifier.height(24.dp)) }
             
+            // Section: Manage Plans
+            item {
+                Text(
+                    "Manage Plans",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = GymeTextPrimary,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+            }
+            item {
+                MoreMenuItem(
+                    title = "Membership Plans",
+                    icon = Icons.Outlined.CreditCard,
+                    onClick = onNavigateToPlans
+                )
+            }
+            item {
+                MoreMenuItem(
+                    title = "Gym Services",
+                    icon = Icons.Outlined.List,
+                    onClick = { /* TODO */ }
+                )
+            }
+            
+            item { Spacer(modifier = Modifier.height(24.dp)) }
+            
+            item {
+                Text(
+                    "Gym Settings",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = GymeTextPrimary,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+            }
+            item {
+                MoreMenuItem(
+                    title = "Attendance QR Code",
+                    icon = Icons.Outlined.QrCode,
+                    onClick = { /* TODO */ }
+                )
+            }
             item {
                 MoreMenuItem(
                     title = stringResource(R.string.staff_management),
@@ -83,7 +120,6 @@ fun MoreScreen(
                     onClick = onNavigateToStaff
                 )
             }
-            
             item {
                 MoreMenuItem(
                     title = stringResource(R.string.language_settings),
@@ -94,29 +130,15 @@ fun MoreScreen(
             }
             
             item {
-                MoreMenuItem(
-                    title = stringResource(R.string.appearance),
-                    subtitle = stringResource(R.string.dark_mode),
-                    icon = Icons.Outlined.DarkMode,
-                    onClick = { /* TODO */ }
-                )
-            }
-            
-            item {
-                MoreMenuItem(
-                    title = stringResource(R.string.help_support),
-                    icon = Icons.Outlined.HelpOutline,
-                    onClick = { /* TODO */ }
-                )
-            }
-            
-            item {
                 Spacer(modifier = Modifier.height(32.dp))
                 MoreMenuItem(
                     title = stringResource(R.string.logout),
                     icon = Icons.Outlined.Logout,
                     tint = GymeError,
-                    onClick = { /* TODO */ }
+                    onClick = {
+                        SessionManager.clear(context)
+                        onLogout()
+                    }
                 )
             }
         }

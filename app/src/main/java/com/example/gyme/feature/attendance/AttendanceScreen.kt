@@ -42,7 +42,7 @@ import androidx.core.content.ContextCompat
 import com.example.gyme.R
 import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab
-import com.example.gyme.domain.model.Attendance
+import com.example.gyme.core.model.Attendance
 import com.example.gyme.theme.*
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning

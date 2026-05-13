@@ -8,11 +8,6 @@ sealed class ApiResult<out T> {
 suspend fun <T> safeApiCall(call: suspend () -> T): ApiResult<T> {
     return try {
         ApiResult.Success(call())
-    } catch (e: retrofit2.HttpException) {
-        ApiResult.Error(
-            message = e.response()?.errorBody()?.string() ?: e.message(),
-            code    = e.code()
-        )
     } catch (e: Exception) {
         ApiResult.Error(message = e.localizedMessage ?: "Unknown error")
     }

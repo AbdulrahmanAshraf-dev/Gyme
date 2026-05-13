@@ -2,9 +2,7 @@ package com.example.gyme.feature.notifications
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gyme.domain.model.Notification
-import com.example.gyme.domain.model.NotificationType
-import com.example.gyme.domain.repository.NotificationsRepository
+import com.example.gyme.core.model.*
 import com.example.gyme.util.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +23,7 @@ enum class NotificationFilter {
 }
 
 class NotificationsViewModel(
-    private val repository: NotificationsRepository
+    private val repository: NotificationsRepository = NotificationsRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<NotificationsUiState>(NotificationsUiState.Loading)
@@ -45,10 +43,6 @@ class NotificationsViewModel(
             when (val result = repository.getAll()) {
                 is ApiResult.Success -> {
                     allNotifications = result.data
-                    if (allNotifications.isEmpty()) {
-                        // For demo purposes, add some mock data if empty
-                        allNotifications = getMockNotifications()
-                    }
                     applyFilter()
                 }
                 is ApiResult.Error -> {
@@ -81,32 +75,4 @@ class NotificationsViewModel(
         _uiState.value = NotificationsUiState.Success(filtered, currentFilter)
     }
 
-    private fun getMockNotifications(): List<Notification> {
-        return listOf(
-            Notification(
-                id = "1",
-                title = "Subscription Expiring",
-                message = "Member Elena R.'s annual membership is due to expire in 3 days.",
-                type = NotificationType.SUBSCRIPTION,
-                createdAt = "2m ago",
-                isRead = false
-            ),
-            Notification(
-                id = "2",
-                title = "Payment Pending",
-                message = "A payment of $85.00 from Alex J. is currently overdue.",
-                type = NotificationType.PAYMENT,
-                createdAt = "1h ago",
-                isRead = true
-            ),
-            Notification(
-                id = "3",
-                title = "System Update",
-                message = "v4.2.0 has been successfully deployed. Check the changelog for new attendance features.",
-                type = NotificationType.SYSTEM,
-                createdAt = "Yesterday",
-                isRead = true
-            )
-        )
-    }
 }

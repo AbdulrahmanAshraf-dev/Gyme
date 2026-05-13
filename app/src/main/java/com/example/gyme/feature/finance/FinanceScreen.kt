@@ -23,8 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.gyme.domain.model.ExpenseRequest
-import com.example.gyme.domain.model.FinancialStats
+import com.example.gyme.core.model.ExpenseRequest
+import com.example.gyme.core.model.FinancialStats
 import com.example.gyme.theme.*
 import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab

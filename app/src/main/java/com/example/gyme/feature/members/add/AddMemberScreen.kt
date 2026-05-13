@@ -3,6 +3,8 @@ package com.example.gyme.feature.members.add
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,9 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gyme.domain.model.DiscountType
-import com.example.gyme.domain.model.Gender
-import com.example.gyme.domain.model.MembershipPlan
+import com.example.gyme.core.model.MembershipPlan
 import com.example.gyme.theme.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -285,7 +285,9 @@ fun GymeTextField(label: String, value: String, onValueChange: (String) -> Unit,
                 focusedContainerColor = GymeDivider,
                 unfocusedContainerColor = GymeDivider,
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
             )
         )
     }
@@ -327,7 +329,7 @@ fun PhoneNumberField(value: String, onValueChange: (String) -> Unit) {
 }
 
 @Composable
-fun GenderSelector(selected: Gender, onGenderChange: (Gender) -> Unit) {
+fun GenderSelector(selected: String, onGenderChange: (String) -> Unit) {
     Column {
         Text("GENDER", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
         Spacer(modifier = Modifier.height(8.dp))
@@ -336,7 +338,7 @@ fun GenderSelector(selected: Gender, onGenderChange: (Gender) -> Unit) {
             shape = RoundedCornerShape(12.dp)
         ) {
             Row(modifier = Modifier.padding(4.dp)) {
-                listOf(Gender.MALE, Gender.FEMALE, Gender.OTHER).forEach { gender ->
+                listOf("male", "female").forEach { gender ->
                     val isSelected = selected == gender
                     Surface(
                         modifier = Modifier
@@ -346,11 +348,12 @@ fun GenderSelector(selected: Gender, onGenderChange: (Gender) -> Unit) {
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            gender.name.lowercase().replaceFirstChar { it.uppercase() },
+                            gender.replaceFirstChar { it.uppercase() },
                             modifier = Modifier.padding(vertical = 12.dp),
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            color = if (isSelected) GymePrimary else GymeTextSecondary
                         )
                     }
                 }
@@ -393,6 +396,8 @@ fun DatePickerField(label: String, date: Date?, onDateSelected: (Date) -> Unit =
 
 @Composable
 fun PlanSelector(selected: MembershipPlan?, plans: List<MembershipPlan>, onPlanChange: (MembershipPlan) -> Unit) {
+    var showDialog by remember { mutableStateOf(false) }
+    
     Column {
         Text("SELECT PLAN", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
         Spacer(modifier = Modifier.height(8.dp))
@@ -401,7 +406,7 @@ fun PlanSelector(selected: MembershipPlan?, plans: List<MembershipPlan>, onPlanC
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { /* Show Dropdown */ }
+                .clickable { showDialog = true }
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -409,12 +414,56 @@ fun PlanSelector(selected: MembershipPlan?, plans: List<MembershipPlan>, onPlanC
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = selected?.name ?: "Select a membership plan...",
+                    text = selected?.let { "${it.name} ($${it.price})" } ?: "Select a membership plan...",
                     color = if (selected != null) Color.Black else GymeTextSecondary
                 )
                 Icon(Icons.Default.ArrowDropDown, contentDescription = null, tint = GymeTextSecondary)
             }
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Select Membership Plan", fontWeight = FontWeight.Bold) },
+            text = {
+                LazyColumn {
+                    items(plans) { plan ->
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .clickable { 
+                                    onPlanChange(plan)
+                                    showDialog = false 
+                                },
+                            color = if (selected?.id == plan.id) GymePrimaryLight else Color.Transparent,
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(plan.name, fontWeight = FontWeight.Bold)
+                                    Text("${plan.durationMonths} Month(s)", fontSize = 12.sp, color = GymeTextSecondary)
+                                }
+                                Text("$${plan.price}", fontWeight = FontWeight.ExtraBold, color = GymePrimary)
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Cancel", color = GymePrimary)
+                }
+            },
+            containerColor = Color.White,
+            shape = RoundedCornerShape(24.dp)
+        )
     }
 }
 
@@ -422,9 +471,9 @@ fun PlanSelector(selected: MembershipPlan?, plans: List<MembershipPlan>, onPlanC
 fun PaymentSummary(
     subtotal: Double,
     discount: String,
-    discountType: DiscountType,
+    discountType: String,
     onDiscountChange: (String) -> Unit,
-    onDiscountTypeChange: (DiscountType) -> Unit
+    onDiscountTypeChange: (String) -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = GymeDarkSurface),
@@ -461,16 +510,16 @@ fun PaymentSummary(
                     ) {
                         Row(modifier = Modifier.padding(2.dp)) {
                             Surface(
-                                color = if (discountType == DiscountType.PERCENTAGE) Color.White else Color.Transparent,
+                                color = if (discountType == "percentage") Color.White else Color.Transparent,
                                 shape = RoundedCornerShape(6.dp),
-                                modifier = Modifier.clickable { onDiscountTypeChange(DiscountType.PERCENTAGE) }
+                                modifier = Modifier.clickable { onDiscountTypeChange("percentage") }
                             ) {
                                 Text("%", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.Bold)
                             }
                             Surface(
-                                color = if (discountType == DiscountType.FIXED) Color.White else Color.Transparent,
+                                color = if (discountType == "fixed") Color.White else Color.Transparent,
                                 shape = RoundedCornerShape(6.dp),
-                                modifier = Modifier.clickable { onDiscountTypeChange(DiscountType.FIXED) }
+                                modifier = Modifier.clickable { onDiscountTypeChange("fixed") }
                             ) {
                                 Text("$", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontWeight = FontWeight.Bold)
                             }
@@ -487,7 +536,7 @@ fun PaymentSummary(
             
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text("Total Due", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                val total = if (discountType == DiscountType.PERCENTAGE) {
+                val total = if (discountType == "percentage") {
                     subtotal * (1 - (discount.toDoubleOrNull() ?: 0.0) / 100)
                 } else {
                     subtotal - (discount.toDoubleOrNull() ?: 0.0)

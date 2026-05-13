@@ -15,8 +15,6 @@ import com.example.gyme.feature.members.add.AddMemberScreen
 import com.example.gyme.feature.members.add.AddMemberViewModel
 import com.example.gyme.feature.members.update.UpdateMemberScreen
 import com.example.gyme.feature.members.update.UpdateMemberViewModel
-import com.example.gyme.domain.usecase.*
-import com.example.gyme.data.repository.*
 import com.example.gyme.feature.attendance.AttendanceScreen
 import com.example.gyme.feature.attendance.AttendanceViewModel
 import com.example.gyme.feature.notifications.NotificationsScreen
@@ -24,12 +22,17 @@ import com.example.gyme.feature.notifications.NotificationsViewModel
 import com.example.gyme.feature.more.MoreScreen
 import com.example.gyme.feature.staff.StaffScreen
 import com.example.gyme.feature.staff.StaffViewModel
+import com.example.gyme.feature.plans.PlansScreen
+import com.example.gyme.feature.plans.PlansViewModel
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(
+    navController: NavHostController,
+    startDestination: String = Screen.Onboarding.route
+) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Onboarding.route
+        startDestination = startDestination
     ) {
         composable(Screen.Onboarding.route) {
             OnboardingScreen(
@@ -167,8 +170,16 @@ fun NavGraph(navController: NavHostController) {
                 onNavigateToStaff = {
                     navController.navigate(Screen.StaffManagement.route)
                 },
+                onNavigateToPlans = {
+                    navController.navigate(Screen.Plans.route)
+                },
                 onNavigateToNotifications = {
                     navController.navigate(Screen.Notifications.route)
+                },
+                onLogout = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }
@@ -205,11 +216,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.AddMember.route) {
-            val repository = MemberRepositoryImpl()
-            val addMemberUseCase = AddMemberUseCase(repository)
-            val getPlansUseCase = GetMembershipPlansUseCase(repository)
-            val viewModel = AddMemberViewModel(addMemberUseCase, getPlansUseCase)
-            
+            val viewModel: AddMemberViewModel = viewModel()
             AddMemberScreen(
                 viewModel = viewModel,
                 onNavigateBack = {
@@ -223,14 +230,13 @@ fun NavGraph(navController: NavHostController) {
             arguments = listOf(navArgument("memberId") { type = NavType.StringType })
         ) { backStackEntry ->
             val memberId = backStackEntry.arguments?.getString("memberId") ?: ""
-            val repository = MemberRepositoryImpl()
-            
-            val viewModel = UpdateMemberViewModel(
-                memberId = memberId,
-                getMemberDetails = GetMemberDetailsUseCase(repository),
-                getMemberPaymentHistory = GetMemberPaymentHistoryUseCase(repository),
-                getMembershipPlans = GetMembershipPlansUseCase(repository),
-                updateMember = UpdateMemberUseCase(repository)
+            // We use a custom factory or just instantiate it here simply
+            val viewModel: UpdateMemberViewModel = viewModel(
+                factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+                    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                        return UpdateMemberViewModel(memberId) as T
+                    }
+                }
             )
             
             UpdateMemberScreen(
@@ -242,10 +248,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Attendance.route) {
-            val repository = AttendanceRepositoryImpl()
-            val memberRepo = MembersRepositoryImpl()
-            val checkInUseCase = CheckInMemberUseCase(memberRepo, repository)
-            val viewModel = AttendanceViewModel(checkInUseCase)
+            val viewModel: AttendanceViewModel = viewModel()
 
             AttendanceScreen(
                 viewModel = viewModel,
@@ -276,8 +279,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Notifications.route) {
-            val repository = NotificationsRepositoryImpl()
-            val viewModel = NotificationsViewModel(repository)
+            val viewModel: NotificationsViewModel = viewModel()
 
             com.example.gyme.feature.notifications.NotificationsScreen(
                 viewModel = viewModel,
@@ -310,6 +312,16 @@ fun NavGraph(navController: NavHostController) {
                         launchSingleTop = true
                     }
                 },
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(Screen.Plans.route) {
+            val viewModel: PlansViewModel = viewModel()
+            PlansScreen(
+                viewModel = viewModel,
                 onNavigateBack = {
                     navController.popBackStack()
                 }

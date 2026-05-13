@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.gyme.domain.model.DashboardStats
+import com.example.gyme.core.model.DashboardStats
 import com.example.gyme.theme.*
 import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab
@@ -114,7 +114,7 @@ fun DashboardContent(
             .padding(horizontal = 24.dp)
     ) {
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item { HomeHeader(onNavigateToNotifications) }
+        item { HomeHeader(userName = stats.userName, onNavigateToNotifications = onNavigateToNotifications) }
         item { Spacer(modifier = Modifier.height(32.dp)) }
         item { HomeGreeting(userName = stats.userName) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
@@ -130,7 +130,7 @@ fun DashboardContent(
 }
 
 @Composable
-fun HomeHeader(onNavigateToNotifications: () -> Unit = {}) {
+fun HomeHeader(userName: String, onNavigateToNotifications: () -> Unit = {}) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -151,7 +151,7 @@ fun HomeHeader(onNavigateToNotifications: () -> Unit = {}) {
             }
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Gym Manager",
+                text = userName,
                 color = GymeTextPrimary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp

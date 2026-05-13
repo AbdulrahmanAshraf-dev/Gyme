@@ -2,12 +2,14 @@ package com.example.gyme.feature.attendance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gyme.domain.usecase.CheckInMemberUseCase
-import com.example.gyme.domain.usecase.CheckInResult
+import com.example.gyme.feature.members.MembersRepository
+import com.example.gyme.core.model.*
+import com.example.gyme.util.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.*
 
 sealed class AttendanceUiState {
     object Idle : AttendanceUiState()
@@ -19,7 +21,8 @@ sealed class AttendanceUiState {
 }
 
 class AttendanceViewModel(
-    private val checkInMemberUseCase: CheckInMemberUseCase
+    private val attendanceRepository: AttendanceRepository = AttendanceRepository(),
+    private val membersRepository: MembersRepository = MembersRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AttendanceUiState>(AttendanceUiState.Scanning)
@@ -38,16 +41,27 @@ class AttendanceViewModel(
         viewModelScope.launch {
             _uiState.value = AttendanceUiState.Loading
             
-            when (val result = checkInMemberUseCase(barcode)) {
-                is CheckInResult.Success -> {
-                    _uiState.value = AttendanceUiState.Success(result.member.name)
+            // Check member and subscription
+            val memberResult = membersRepository.getById(barcode)
+            if (memberResult is ApiResult.Success) {
+                val member = memberResult.data
+                val now = java.util.Date()
+                val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", java.util.Locale.US)
+                val expiryDate = try { member.subscriptionEnd?.let { sdf.parse(it) } } catch (e: Exception) { null }
+
+                if (expiryDate != null && expiryDate.before(now)) {
+                    _uiState.value = AttendanceUiState.SubscriptionExpired(member.name)
+                } else {
+                    // Perform check-in
+                    val checkInResult = attendanceRepository.checkIn(barcode, now.toString())
+                    if (checkInResult is ApiResult.Success) {
+                        _uiState.value = AttendanceUiState.Success(member.name)
+                    } else {
+                        _uiState.value = AttendanceUiState.Error("Check-in failed")
+                    }
                 }
-                is CheckInResult.SubscriptionExpired -> {
-                    _uiState.value = AttendanceUiState.SubscriptionExpired(result.member.name)
-                }
-                is CheckInResult.Error -> {
-                    _uiState.value = AttendanceUiState.Error(result.message)
-                }
+            } else {
+                _uiState.value = AttendanceUiState.Error("Member not found")
             }
         }
     }

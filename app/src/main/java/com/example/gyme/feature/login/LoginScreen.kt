@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gyme.theme.GymeButtonBg
 import com.example.gyme.theme.GymeButtonText
 import com.example.gyme.theme.GymeIconTint
+import com.example.gyme.util.SessionManager
 
 private val FieldBg          = Color(0xFFF3F4F6)
 private val LabelColor       = Color(0xFF9CA3AF)
@@ -48,6 +49,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = viewModel()
 ) {
     val focusManager = LocalFocusManager.current
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     Box(
         modifier = Modifier
@@ -170,7 +172,10 @@ fun LoginScreen(
                 keyboardActions = KeyboardActions(
                     onDone = {
                         focusManager.clearFocus()
-                        viewModel.signIn(onLoginSuccess)
+                        viewModel.signIn { user ->
+                            SessionManager.saveSession(context, user)
+                            onLoginSuccess()
+                        }
                     }
                 )
             )
@@ -193,7 +198,12 @@ fun LoginScreen(
             Spacer(Modifier.height(32.dp))
 
             Button(
-                onClick = { viewModel.signIn(onLoginSuccess) },
+                onClick = { 
+                    viewModel.signIn { user ->
+                        SessionManager.saveSession(context, user)
+                        onLoginSuccess()
+                    }
+                },
                 enabled = !viewModel.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()

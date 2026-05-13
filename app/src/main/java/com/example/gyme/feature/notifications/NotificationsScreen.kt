@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab
-import com.example.gyme.domain.model.Notification
-import com.example.gyme.domain.model.NotificationType
+import com.example.gyme.core.model.Notification
+import com.example.gyme.core.model.NotificationType
 import com.example.gyme.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)

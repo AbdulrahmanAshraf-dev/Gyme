@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.gyme.navigation.NavGraph
@@ -18,8 +19,12 @@ class MainActivity : AppCompatActivity() {
         setContent {
             GymeTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
+                    val context = androidx.compose.ui.platform.LocalContext.current
+                    val user = remember<com.example.gyme.core.model.User?> { com.example.gyme.util.SessionManager.loadSession(context) }
+                    val startDestination = if (user != null) "home" else com.example.gyme.navigation.Screen.Onboarding.route
+                    
                     val navController = rememberNavController()
-                    NavGraph(navController = navController)
+                    NavGraph(navController = navController, startDestination = startDestination)
                 }
             }
         }

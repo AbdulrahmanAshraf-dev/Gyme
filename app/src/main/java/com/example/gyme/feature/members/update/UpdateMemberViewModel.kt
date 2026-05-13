@@ -2,8 +2,9 @@ package com.example.gyme.feature.members.update
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gyme.domain.model.*
-import com.example.gyme.domain.usecase.*
+import com.example.gyme.feature.members.MembersRepository
+import com.example.gyme.core.model.*
+import com.example.gyme.util.ApiResult
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -18,10 +19,7 @@ data class UpdateMemberUiState(
 
 class UpdateMemberViewModel(
     private val memberId: String,
-    private val getMemberDetails: GetMemberDetailsUseCase,
-    private val getMemberPaymentHistory: GetMemberPaymentHistoryUseCase,
-    private val getMembershipPlans: GetMembershipPlansUseCase,
-    private val updateMember: UpdateMemberUseCase
+    private val repository: MembersRepository = MembersRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UpdateMemberUiState())
@@ -35,18 +33,15 @@ class UpdateMemberViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             
-            // Parallel loading
-            val detailsResult = getMemberDetails(memberId)
-            val historyResult = getMemberPaymentHistory(memberId)
+            val detailsResult = repository.getById(memberId)
             
-            getMembershipPlans().collect { plans ->
+            repository.getMembershipPlans().collect { plans ->
                 _uiState.update { state ->
                     state.copy(
                         isLoading = false,
-                        member = detailsResult.getOrNull(),
-                        paymentHistory = historyResult.getOrDefault(emptyList()),
+                        member = if (detailsResult is ApiResult.Success) detailsResult.data else null,
                         availablePlans = plans,
-                        error = if (detailsResult.isFailure) detailsResult.exceptionOrNull()?.message else null
+                        error = if (detailsResult is ApiResult.Error) detailsResult.message else null
                     )
                 }
             }
@@ -81,10 +76,20 @@ class UpdateMemberViewModel(
         val currentMember = _uiState.value.member ?: return
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            updateMember(currentMember).onSuccess {
-                _uiState.update { it.copy(isLoading = false, isUpdateSuccess = true) }
-            }.onFailure { e ->
-                _uiState.update { it.copy(isLoading = false, error = e.message) }
+            val result = repository.update(
+                id = currentMember.id,
+                name = currentMember.name,
+                phone = currentMember.phone,
+                status = currentMember.status
+            )
+            
+            when (result) {
+                is ApiResult.Success -> {
+                    _uiState.update { it.copy(isLoading = false, isUpdateSuccess = true) }
+                }
+                is ApiResult.Error -> {
+                    _uiState.update { it.copy(isLoading = false, error = result.message) }
+                }
             }
         }
     }

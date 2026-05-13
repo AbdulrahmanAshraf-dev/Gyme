@@ -2,9 +2,8 @@ package com.example.gyme.feature.staff
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gyme.domain.model.StaffStats
-import com.example.gyme.domain.model.StaffMember
-import kotlinx.coroutines.delay
+import com.example.gyme.core.model.*
+import com.example.gyme.util.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +19,9 @@ sealed class StaffUiState {
     data class Error(val message: String) : StaffUiState()
 }
 
-class StaffViewModel : ViewModel() {
+class StaffViewModel(
+    private val repository: StaffRepository = StaffRepository()
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<StaffUiState>(StaffUiState.Loading)
     val uiState: StateFlow<StaffUiState> = _uiState.asStateFlow()
@@ -32,57 +33,37 @@ class StaffViewModel : ViewModel() {
     private fun loadStaffData() {
         viewModelScope.launch {
             _uiState.value = StaffUiState.Loading
-            delay(800)
             
-            val dummyStats = StaffStats(
-                totalActiveStaff = 42,
-                growthText = "+3 this month",
-                onShiftNow = 14,
-                pendingRequests = 5
-            )
+            val result = repository.getAll()
+            if (result is ApiResult.Success) {
+                val users = result.data
+                val staffList = users.map { 
+                    StaffMember(
+                        id = it.id,
+                        name = it.name,
+                        role = it.role.uppercase(),
+                        email = it.email,
+                        accessLabel = "System Access",
+                        accessDescription = if (it.canDeleteMember) "Full Access" else "Limited Access",
+                        isAccessEnabled = true
+                    )
+                }
 
-            val dummyTopTrainer = StaffMember(
-                id = "0",
-                name = "Abdulrahman",
-                role = "TRAINER",
-                email = "abdulrahman@gymmanager.com",
-                accessLabel = "Booking System",
-                accessDescription = "Client Schedule & Notes",
-                isAccessEnabled = true,
-                rating = 4.9
-            )
-
-            val dummyStaff = listOf(
-                StaffMember(
-                    id = "1",
-                    name = "Sarah Connor",
-                    role = "MANAGER",
-                    email = "sarah.c@gymmanager.com",
-                    accessLabel = "System Access",
-                    accessDescription = "Full Administrative Rights",
-                    isAccessEnabled = true
-                ),
-                StaffMember(
-                    id = "2",
-                    name = "Abdulrahman",
-                    role = "TRAINER",
-                    email = "abdulrahman@gymmanager.com",
-                    accessLabel = "Booking System",
-                    accessDescription = "Client Schedule & Notes",
-                    isAccessEnabled = true
-                ),
-                StaffMember(
-                    id = "3",
-                    name = "Elena Rodriguez",
-                    role = "RECEPTIONIST",
-                    email = "elena.r@gymmanager.com",
-                    accessLabel = "Financial Access",
-                    accessDescription = "View Only / Processing",
-                    isAccessEnabled = false
+                val stats = StaffStats(
+                    totalActiveStaff = users.size,
+                    growthText = "",
+                    onShiftNow = users.size,
+                    pendingRequests = 0
                 )
-            )
 
-            _uiState.value = StaffUiState.Success(dummyStats, dummyTopTrainer, dummyStaff)
+                val topTrainer = staffList.firstOrNull { it.role == "TRAINER" } ?: staffList.firstOrNull() ?: StaffMember(
+                    "0", "Guest", "STAFF", "", "", "", false
+                )
+
+                _uiState.value = StaffUiState.Success(stats, topTrainer, staffList)
+            } else {
+                _uiState.value = StaffUiState.Error("Failed to load staff")
+            }
         }
     }
 

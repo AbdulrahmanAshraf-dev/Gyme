@@ -5,14 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gyme.data.repository.AuthRepositoryImpl
-import com.example.gyme.domain.repository.AuthRepository
+import com.example.gyme.core.model.User
 import com.example.gyme.util.ApiResult
 import com.example.gyme.util.SessionManager
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authRepository: AuthRepository = AuthRepositoryImpl()
+    private val authRepository: LoginRepository = LoginRepository()
 ) : ViewModel() {
 
     var email by mutableStateOf("")
@@ -44,7 +43,7 @@ class LoginViewModel(
         isPasswordVisible = !isPasswordVisible
     }
 
-    fun signIn(onSuccess: () -> Unit) {
+    fun signIn(onSuccess: (User) -> Unit) {
         if (email.isBlank() || password.isBlank()) {
             errorMessage = "Please enter your email and password."
             return
@@ -55,8 +54,14 @@ class LoginViewModel(
 
             when (val result = authRepository.signIn(email.trim(), password)) {
                 is ApiResult.Success -> {
-                    SessionManager.currentUser = result.data
-                    onSuccess()
+                    // SessionManager.saveSession requires context, usually provided via application or injected.
+                    // For simplicity, we'll assume the viewmodel's caller or a context provider handles it.
+                    // But wait, the ViewModel doesn't have context. 
+                    // Let's pass the user back and let the screen handle saving, 
+                    // or use a context in SessionManager differently.
+                    
+                    // Actually, I can update LoginScreen to handle this.
+                    onSuccess(result.data)
                 }
                 is ApiResult.Error -> {
                     errorMessage = when {
