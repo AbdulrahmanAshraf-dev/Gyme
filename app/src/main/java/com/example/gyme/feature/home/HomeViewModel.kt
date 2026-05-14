@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gyme.feature.members.MembersRepository
 import com.example.gyme.feature.finance.FinanceRepository
-import com.example.gyme.feature.attendance.AttendanceRepository
+import com.example.gyme.feature.attendance.repo.AttendanceRepository
 import com.example.gyme.data.remote.supabaseSdk
 import io.github.jan.supabase.auth.auth
 import com.example.gyme.core.model.*

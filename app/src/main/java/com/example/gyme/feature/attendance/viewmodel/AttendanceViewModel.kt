@@ -1,15 +1,17 @@
-package com.example.gyme.feature.attendance
+package com.example.gyme.feature.attendance.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gyme.feature.members.MembersRepository
-import com.example.gyme.core.model.*
+import com.example.gyme.feature.attendance.repo.AttendanceRepository
 import com.example.gyme.util.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.util.*
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 sealed class AttendanceUiState {
     object Idle : AttendanceUiState()
@@ -41,12 +43,11 @@ class AttendanceViewModel(
         viewModelScope.launch {
             _uiState.value = AttendanceUiState.Loading
             
-            // Check member and subscription
             val memberResult = membersRepository.getById(barcode)
             if (memberResult is ApiResult.Success) {
                 val member = memberResult.data
-                val now = java.util.Date()
-                val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", java.util.Locale.US)
+                val now = Date()
+                val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.US)
                 val expiryDate = try { member.subscriptionEnd?.let { sdf.parse(it) } } catch (e: Exception) { null }
 
                 if (expiryDate != null && expiryDate.before(now)) {

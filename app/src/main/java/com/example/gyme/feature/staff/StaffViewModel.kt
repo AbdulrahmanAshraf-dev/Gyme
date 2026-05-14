@@ -100,7 +100,6 @@ class StaffViewModel(
     }
 
     fun onSearchQueryChanged(query: String) {
-        // Implement search logic
     }
 
     fun createStaffAccount(name: String, email: String, password: String, permissions: Map<String, Boolean>) {
@@ -111,8 +110,6 @@ class StaffViewModel(
             _uiState.value = StaffUiState.Loading
             
             try {
-                // 1. Create a TEMPORARY client just for this signup 
-                // This prevents the main admin session from being logged out
                 val tempClient = createSupabaseClient(
                     supabaseUrl = BuildConfig.SUPABASE_URL,
                     supabaseKey = BuildConfig.SUPABASE_API_KEY
@@ -121,17 +118,14 @@ class StaffViewModel(
                     install(Postgrest)
                 }
 
-                // 2. Sign up the user using the temporary client
                 tempClient.auth.signUpWith(Email) {
                     this.email = cleanEmail
                     this.password = password
-                    // In newer version, we can just omit 'data' or use a map if supported
                 }
                 
                 val newUserId = tempClient.auth.currentUserOrNull()?.id
                 
                 if (newUserId != null) {
-                    // 3. Update their profile with name and permissions using the ADMIN session (main client)
                     repository.updateUserName(newUserId, cleanName)
                     repository.updateUserRole(newUserId, "staff")
                     repository.updatePermission(newUserId, "add", permissions["add"] ?: false)
@@ -139,10 +133,8 @@ class StaffViewModel(
                     repository.updatePermission(newUserId, "delete", permissions["delete"] ?: false)
                     repository.updatePermission(newUserId, "finance", permissions["finance"] ?: false)
                     
-                    // Success! Refresh list without logging out
                     loadStaffData()
                     
-                    // Close the temp client
                     tempClient.close()
                 } else {
                     _uiState.value = StaffUiState.Error("Failed to retrieve new user ID")

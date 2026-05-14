@@ -1,18 +1,14 @@
-package com.example.gyme.feature.attendance
+package com.example.gyme.feature.attendance.view
 
 import android.Manifest
-import android.util.Size
+import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -40,15 +36,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.gyme.R
-import com.example.gyme.core.ui.GymeBottomNavigation
-import com.example.gyme.core.ui.GymeBottomTab
-import com.example.gyme.core.model.Attendance
+import com.example.gyme.feature.attendance.viewmodel.AttendanceUiState
+import com.example.gyme.feature.attendance.viewmodel.AttendanceViewModel
 import com.example.gyme.theme.*
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import java.util.concurrent.Executors
 
 @Composable
 fun AttendanceScreen(
@@ -68,7 +62,7 @@ fun AttendanceScreen(
             ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.CAMERA
-            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         )
     }
 
@@ -136,7 +130,6 @@ fun AttendanceScreen(
                 Spacer(modifier = Modifier.height(120.dp))
             }
 
-            // Status Alerts
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -258,7 +251,6 @@ fun ScannerOverlay() {
         val right = left + rectSize
         val bottom = top + rectSize
 
-        // Background dim
         val path = Path().apply {
             moveTo(0f, 0f)
             lineTo(size.width, 0f)
@@ -266,7 +258,6 @@ fun ScannerOverlay() {
             lineTo(0f, size.height)
             close()
             
-            // Cutout
             addRoundRect(
                 RoundRect(
                     left = left,
@@ -279,10 +270,8 @@ fun ScannerOverlay() {
         }
         drawPath(path, color = Color.Black.copy(alpha = 0.6f), style = Fill)
 
-        // Green frame corners
         val frameColor = GymePrimary
         
-        // Top Left
         drawPath(
             Path().apply {
                 moveTo(left, top + cornerLength)
@@ -294,7 +283,6 @@ fun ScannerOverlay() {
             style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
         )
 
-        // Top Right
         drawPath(
             Path().apply {
                 moveTo(right - cornerLength, top)
@@ -306,7 +294,6 @@ fun ScannerOverlay() {
             style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
         )
 
-        // Bottom Left
         drawPath(
             Path().apply {
                 moveTo(left, bottom - cornerLength)
@@ -318,7 +305,6 @@ fun ScannerOverlay() {
             style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
         )
 
-        // Bottom Right
         drawPath(
             Path().apply {
                 moveTo(right, bottom - cornerLength)
@@ -539,7 +525,6 @@ fun GymeBottomNav(
                 onClick = onMembersClick
             )
             
-            // QR Center Item
             Box(
                 modifier = Modifier
                     .size(60.dp)

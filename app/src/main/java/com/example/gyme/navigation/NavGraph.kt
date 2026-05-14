@@ -1,13 +1,11 @@
 package com.example.gyme.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gyme.feature.login.LoginScreen
 import com.example.gyme.feature.onboarding.OnboardingScreen
@@ -15,9 +13,8 @@ import com.example.gyme.feature.members.add.AddMemberScreen
 import com.example.gyme.feature.members.add.AddMemberViewModel
 import com.example.gyme.feature.members.update.UpdateMemberScreen
 import com.example.gyme.feature.members.update.UpdateMemberViewModel
-import com.example.gyme.feature.attendance.AttendanceScreen
-import com.example.gyme.feature.attendance.AttendanceViewModel
-import com.example.gyme.feature.notifications.NotificationsScreen
+import com.example.gyme.feature.attendance.view.AttendanceScreen
+import com.example.gyme.feature.attendance.viewmodel.AttendanceViewModel
 import com.example.gyme.feature.notifications.NotificationsViewModel
 import com.example.gyme.feature.more.MoreScreen
 import com.example.gyme.feature.staff.StaffScreen
