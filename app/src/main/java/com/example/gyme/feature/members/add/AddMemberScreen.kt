@@ -34,9 +34,17 @@ fun AddMemberScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let {
+            snackbarHostState.showSnackbar(it)
+        }
+    }
 
     Scaffold(
         containerColor = GymeBackground,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("Add Member", fontWeight = FontWeight.Bold) },
@@ -287,7 +295,8 @@ fun GymeTextField(label: String, value: String, onValueChange: (String) -> Unit,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black
+                unfocusedTextColor = Color.Black,
+                cursorColor = GymePrimary
             )
         )
     }
@@ -305,7 +314,7 @@ fun PhoneNumberField(value: String, onValueChange: (String) -> Unit) {
                 modifier = Modifier.height(56.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 12.dp)) {
-                    Text("+1", fontWeight = FontWeight.Bold)
+                    Text("+20", fontWeight = FontWeight.Bold, color = Color.Black)
                     Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                 }
             }
@@ -321,7 +330,10 @@ fun PhoneNumberField(value: String, onValueChange: (String) -> Unit) {
                     focusedContainerColor = GymeDivider,
                     unfocusedContainerColor = GymeDivider,
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    cursorColor = GymePrimary
                 )
             )
         }
@@ -362,9 +374,15 @@ fun GenderSelector(selected: String, onGenderChange: (String) -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerField(label: String, date: Date?, onDateSelected: (Date) -> Unit = {}) {
     val format = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = date?.time ?: System.currentTimeMillis()
+    )
+
     Column {
         Text(label, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
         Spacer(modifier = Modifier.height(8.dp))
@@ -373,11 +391,7 @@ fun DatePickerField(label: String, date: Date?, onDateSelected: (Date) -> Unit =
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { 
-                    // In a real app, show material date picker
-                    // For now, simulate by setting to current date or picking tomorrow
-                    onDateSelected(Date()) 
-                }
+                .clickable { showDatePicker = true }
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
@@ -390,6 +404,30 @@ fun DatePickerField(label: String, date: Date?, onDateSelected: (Date) -> Unit =
                 )
                 Icon(Icons.Default.CalendarToday, contentDescription = null, tint = GymeTextSecondary, modifier = Modifier.size(20.dp))
             }
+        }
+    }
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        onDateSelected(Date(it))
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK", color = GymePrimary)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel", color = GymeTextSecondary)
+                }
+            },
+            colors = DatePickerDefaults.colors(containerColor = Color.White)
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 }
@@ -526,7 +564,21 @@ fun PaymentSummary(
                         }
                     }
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(discount, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    androidx.compose.foundation.text.BasicTextField(
+                        value = discount,
+                        onValueChange = onDiscountChange,
+                        textStyle = androidx.compose.ui.text.TextStyle(
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.End
+                        ),
+                        modifier = Modifier.width(60.dp),
+                        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
+                        ),
+                        cursorBrush = androidx.compose.ui.graphics.SolidColor(Color.White)
+                    )
                 }
             }
             
@@ -541,7 +593,7 @@ fun PaymentSummary(
                 } else {
                     subtotal - (discount.toDoubleOrNull() ?: 0.0)
                 }
-                Text("$${String.format("%.2f", total)}", color = GymePrimaryLight, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
+                Text(com.example.gyme.util.CurrencyUtils.formatEGP(total), color = GymePrimaryLight, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
             }
         }
     }

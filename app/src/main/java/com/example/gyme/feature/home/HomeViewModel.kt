@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.gyme.feature.members.MembersRepository
 import com.example.gyme.feature.finance.FinanceRepository
 import com.example.gyme.feature.attendance.AttendanceRepository
+import com.example.gyme.data.remote.supabaseSdk
+import io.github.jan.supabase.auth.auth
 import com.example.gyme.core.model.*
 import com.example.gyme.util.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +40,17 @@ class HomeViewModel(
             val membersResult = membersRepository.getAll()
             val financeResult = financeRepository.getAll()
             val attendanceResult = attendanceRepository.getAll()
+            
+            // Fetch user info from API
+            val userFromApi = try {
+                supabaseSdk.supabase.auth.retrieveUserForCurrentSession(updateSession = true)
+            } catch (e: Exception) {
+                null
+            }
+            
+            val apiName = userFromApi?.userMetadata?.get("full_name")?.toString()?.replace("\"", "")
+                ?: userFromApi?.userMetadata?.get("name")?.toString()?.replace("\"", "")
+                ?: com.example.gyme.util.SessionManager.currentUser?.name
 
             if (membersResult is ApiResult.Success && 
                 financeResult is ApiResult.Success && 
@@ -51,18 +64,22 @@ class HomeViewModel(
                 val expiringSoon = 0 // Calculate based on dates if needed
                 val expired = members.count { it.status == "expired" }
                 
-                val todayRevenue = transactions.filter { it.type == "income" }.sumOf { it.amount }
+                val todayRevenue = transactions.filter { it.type.equals("income", ignoreCase = true) }.sumOf { it.amount }
                 
+                val plansResult = membersRepository.getAllPlans()
+                val plansCount = if (plansResult is ApiResult.Success) plansResult.data.size else 0
+
                 val stats = DashboardStats(
-                    userName = com.example.gyme.util.SessionManager.currentUser?.name ?: "Manager",
+                    userName = apiName ?: "Abdulrahman",
                     totalRevenue = todayRevenue,
                     revenueGrowthPercentage = 0,
                     previousRevenue = 0.0,
                     currentlyActive = attendance.size, 
                     capacityPercentage = if (attendance.isNotEmpty()) (attendance.size * 100) / 100 else 0,
                     totalActiveMembers = activeMembers,
-                    expiringSoonMembers = expiringSoon,
-                    expiredMembers = expired
+                    expiringSoonMembers = plansCount, // Using this for plans count debug
+                    expiredMembers = expired,
+                    transactionCount = transactions.size
                 )
                 _uiState.value = HomeUiState.Success(stats)
             } else {

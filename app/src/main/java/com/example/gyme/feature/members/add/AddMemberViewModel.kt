@@ -3,6 +3,8 @@ package com.example.gyme.feature.members.add
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gyme.feature.members.MembersRepository
+import com.example.gyme.feature.finance.FinanceRepository
+import com.example.gyme.util.SessionManager
 import com.example.gyme.core.model.*
 import com.example.gyme.util.ApiResult
 import kotlinx.coroutines.flow.*
@@ -27,7 +29,8 @@ data class AddMemberUiState(
 )
 
 class AddMemberViewModel(
-    private val repository: MembersRepository = MembersRepository()
+    private val repository: MembersRepository = MembersRepository(),
+    private val financeRepository: FinanceRepository = FinanceRepository()
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddMemberUiState())
@@ -51,7 +54,12 @@ class AddMemberViewModel(
     }
 
     fun onFullNameChange(name: String) = _uiState.update { it.copy(name = name) }
-    fun onPhoneNumberChange(phone: String) = _uiState.update { it.copy(phone = phone) }
+    fun onPhoneNumberChange(phone: String) {
+        val cleanPhone = phone.filter { it.isDigit() }
+        if (cleanPhone.length <= 10) {
+            _uiState.update { it.copy(phone = cleanPhone) }
+        }
+    }
     fun onGenderChange(gender: String) = _uiState.update { it.copy(gender = gender) }
     fun onPlanChange(plan: MembershipPlan) = _uiState.update { it.copy(selectedPlan = plan) }
     fun onDiscountChange(discount: String) = _uiState.update { it.copy(discount = discount) }
@@ -76,7 +84,31 @@ class AddMemberViewModel(
 
             when (result) {
                 is ApiResult.Success -> {
-                    _uiState.update { it.copy(isLoading = false, isSuccess = true) }
+                    // Create transaction for the payment
+                    val plan = state.selectedPlan!!
+                    val basePrice = plan.price
+                    val disc = state.discount.toDoubleOrNull() ?: 0.0
+                    val finalPrice = if (state.discountType == "percentage") {
+                        basePrice * (1 - disc / 100)
+                    } else {
+                        basePrice - disc
+                    }
+                    
+                    val financeResult = financeRepository.create(
+                        amount = finalPrice,
+                        type = "income",
+                        description = "Subscription: ${plan.name} - ${state.name}",
+                        createdBy = SessionManager.currentUser?.id ?: ""
+                    )
+                    
+                    if (financeResult is ApiResult.Success) {
+                        _uiState.update { it.copy(isLoading = false, isSuccess = true) }
+                    } else {
+                        // If finance fails, show why but don't hang
+                        val errorMsg = (financeResult as? ApiResult.Error)?.message ?: "Unknown Finance Error"
+                        _uiState.update { it.copy(isLoading = false, error = "Member Added, but Finance failed: $errorMsg") }
+                        // Optional: Still navigate back after a delay or let user see error
+                    }
                 }
                 is ApiResult.Error -> {
                     _uiState.update { it.copy(isLoading = false, error = result.message) }

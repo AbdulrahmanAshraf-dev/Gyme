@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.gyme.navigation.NavGraph
 import com.example.gyme.theme.GymeTheme
+import com.example.gyme.util.SessionManager
+import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,10 +21,9 @@ class MainActivity : AppCompatActivity() {
         setContent {
             GymeTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    val context = androidx.compose.ui.platform.LocalContext.current
-                    val user = remember<com.example.gyme.core.model.User?> { com.example.gyme.util.SessionManager.loadSession(context) }
+                    val context = LocalContext.current
+                    val user = remember { SessionManager.loadSession(context) }
                     val startDestination = if (user != null) "home" else com.example.gyme.navigation.Screen.Onboarding.route
-                    
                     val navController = rememberNavController()
                     NavGraph(navController = navController, startDestination = startDestination)
                 }

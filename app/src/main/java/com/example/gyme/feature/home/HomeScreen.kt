@@ -24,7 +24,9 @@ import com.example.gyme.core.model.DashboardStats
 import com.example.gyme.theme.*
 import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab
+import com.example.gyme.data.remote.supabaseSdk.supabase
 import com.example.gyme.util.CurrencyUtils
+import io.github.jan.supabase.auth.auth
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -40,6 +42,10 @@ fun HomeScreen(
     onNavigateToNotifications: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        viewModel.loadDashboardData()
+    }
 
     Scaffold(
         containerColor = GymeBackground,
@@ -117,6 +123,7 @@ fun DashboardContent(
         item { HomeHeader(userName = stats.userName, onNavigateToNotifications = onNavigateToNotifications) }
         item { Spacer(modifier = Modifier.height(32.dp)) }
         item { HomeGreeting(userName = stats.userName) }
+        
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { HomeQuickActions(onNavigateToAddMember, onNavigateToAttendance) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
