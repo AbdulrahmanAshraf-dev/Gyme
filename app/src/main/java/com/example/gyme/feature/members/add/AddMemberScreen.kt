@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gyme.core.model.MembershipPlan
 import com.example.gyme.theme.*
 import java.text.SimpleDateFormat
@@ -149,8 +150,10 @@ fun AddMemberScreen(
                 subtotal = uiState.selectedPlan?.price ?: 0.0,
                 discount = uiState.discount,
                 discountType = uiState.discountType,
+                amountPaid = uiState.amountPaid,
                 onDiscountChange = viewModel::onDiscountChange,
-                onDiscountTypeChange = viewModel::onDiscountTypeChange
+                onDiscountTypeChange = viewModel::onDiscountTypeChange,
+                onAmountPaidChange = viewModel::onAmountPaidChange
             )
             
             Spacer(modifier = Modifier.height(100.dp)) // Extra space for FAB/BottomBar
@@ -510,8 +513,10 @@ fun PaymentSummary(
     subtotal: Double,
     discount: String,
     discountType: String,
+    amountPaid: String,
     onDiscountChange: (String) -> Unit,
-    onDiscountTypeChange: (String) -> Unit
+    onDiscountTypeChange: (String) -> Unit,
+    onAmountPaidChange: (String) -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = GymeDarkSurface),
@@ -586,14 +591,66 @@ fun PaymentSummary(
             HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
             Spacer(modifier = Modifier.height(32.dp))
             
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Amount Paid", color = Color.White.copy(alpha = 0.5f), fontSize = 16.sp)
+                androidx.compose.foundation.text.BasicTextField(
+                    value = amountPaid,
+                    onValueChange = onAmountPaidChange,
+                    textStyle = androidx.compose.ui.text.TextStyle(
+                        color = GymePrimaryLight,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.End
+                    ),
+                    modifier = Modifier.width(100.dp),
+                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                        keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
+                    ),
+                    cursorBrush = androidx.compose.ui.graphics.SolidColor(Color.White),
+                    decorationBox = { innerTextField ->
+                        Box(contentAlignment = Alignment.CenterEnd) {
+                            if (amountPaid.isEmpty()) {
+                                Text(
+                                    "Enter Amount", 
+                                    color = Color.White.copy(alpha = 0.3f),
+                                    fontSize = 14.sp
+                                )
+                            }
+                            innerTextField()
+                        }
+                    }
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(24.dp))
+            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
+            Spacer(modifier = Modifier.height(32.dp))
+            
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text("Total Due", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                val total = if (discountType == "percentage") {
+                Column {
+                    Text("Total Due", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    val totalDue = if (discountType == "percentage") {
+                        subtotal * (1 - (discount.toDoubleOrNull() ?: 0.0) / 100)
+                    } else {
+                        subtotal - (discount.toDoubleOrNull() ?: 0.0)
+                    }
+                    val paid = amountPaid.toDoubleOrNull() ?: 0.0
+                    val debt = totalDue - paid
+                    if (debt > 0) {
+                        Text("Debt: ${com.example.gyme.util.CurrencyUtils.formatEGP(debt)}", color = GymeError, fontSize = 12.sp)
+                    }
+                }
+                
+                val finalDisplay = if (discountType == "percentage") {
                     subtotal * (1 - (discount.toDoubleOrNull() ?: 0.0) / 100)
                 } else {
                     subtotal - (discount.toDoubleOrNull() ?: 0.0)
                 }
-                Text(com.example.gyme.util.CurrencyUtils.formatEGP(total), color = GymePrimaryLight, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
+                Text(com.example.gyme.util.CurrencyUtils.formatEGP(finalDisplay), color = GymePrimaryLight, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
             }
         }
     }

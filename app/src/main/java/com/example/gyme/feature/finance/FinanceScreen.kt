@@ -1,11 +1,8 @@
 package com.example.gyme.feature.finance
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,9 +26,6 @@ import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab
 import com.example.gyme.core.ui.GymeStatCard
 import com.example.gyme.util.CurrencyUtils
-import com.example.gyme.theme.*
-import java.text.NumberFormat
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,7 +102,7 @@ fun FinanceContent(
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { KpiCardsList(stats) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
-        item { RevenueTrendWidget() }
+        item { RevenueTrendWidget(stats = stats) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { PendingApprovalsWidget(pendingRequests, onApprove, onReview) }
         item { Spacer(modifier = Modifier.height(32.dp)) }
@@ -227,7 +220,7 @@ fun KpiCardsList(stats: FinancialStats) {
 }
 
 @Composable
-fun RevenueTrendWidget() {
+fun RevenueTrendWidget(stats: FinancialStats) {
     Card(
         colors = CardDefaults.cardColors(containerColor = GymeCardBg),
         shape = RoundedCornerShape(16.dp),
@@ -276,25 +269,62 @@ fun RevenueTrendWidget() {
                     HorizontalDivider(color = GymeDivider)
                 }
                 
+                Row(
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    stats.revenueTrendData.forEach { amount ->
+                        val max = stats.revenueTrendData.maxOrNull()?.coerceAtLeast(1.0) ?: 1.0
+                        val heightPercentage = (amount / max).toFloat().coerceIn(0.05f, 1f)
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 4.dp)
+                                .fillMaxHeight(heightPercentage)
+                                .clip(RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp))
+                                .background(
+                                    brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                                        colors = listOf(GymePrimary, GymePrimaryLight)
+                                    )
+                                )
+                        )
+                    }
+                }
+                
                 Surface(
                     color = Color.Black,
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 16.dp, end = 8.dp)
                 ) {
                     Text(
-                        text = "$124.5k",
+                        text = com.example.gyme.util.CurrencyUtils.formatEGP(stats.totalRevenue),
                         color = Color.White,
-                        fontSize = 12.sp,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
             }
             
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                listOf("MAY", "JUN", "JUL", "AUG", "SEP", "OCT").forEach {
-                    Text(text = it, color = GymeTextPrimary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                val sdf = java.text.SimpleDateFormat("MMM", java.util.Locale.US)
+                val labels = mutableListOf<String>()
+                for (i in 5 downTo 0) {
+                    val cal = java.util.Calendar.getInstance()
+                    cal.add(java.util.Calendar.MONTH, -i)
+                    labels.add(sdf.format(cal.time).uppercase())
+                }
+                labels.forEach {
+                    Text(
+                        text = it,
+                        color = GymeTextSecondary,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
                 }
             }
         }

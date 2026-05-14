@@ -74,9 +74,14 @@ fun MembersScreen(
                 is MembersUiState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = GymePrimary)
                 is MembersUiState.Error -> Text(state.message, modifier = Modifier.align(Alignment.Center))
                 is MembersUiState.Success -> {
+                    val filteredMembers = when (state.selectedFilter) {
+                        "Active Only" -> state.members.filter { it.status == "active" }
+                        "VIP Plan" -> state.members.filter { it.plan.contains("VIP", ignoreCase = true) || it.plan.contains("Pro", ignoreCase = true) }
+                        else -> state.members
+                    }
                     MembersContent(
                         stats = state.stats,
-                        members = state.members,
+                        members = filteredMembers,
                         selectedFilter = state.selectedFilter,
                         searchQuery = searchQuery,
                         onSearchQueryChanged = { 
@@ -84,7 +89,10 @@ fun MembersScreen(
                             viewModel.onSearchQueryChanged(it)
                         },
                         onFilterSelected = viewModel::onFilterSelected,
-                        onMemberMenuClicked = viewModel::onMemberMenuClicked,
+                        onRenewMember = { viewModel.renewMember(it) },
+                        onFreezeMember = { viewModel.freezeMember(it) },
+                        onBlockMember = { viewModel.blockMember(it) },
+                        onActivateMember = { viewModel.activateMember(it) },
                         onMemberClicked = onNavigateToUpdateMember
                     )
                 }
@@ -101,7 +109,10 @@ fun MembersContent(
     searchQuery: String,
     onSearchQueryChanged: (String) -> Unit,
     onFilterSelected: (String) -> Unit,
-    onMemberMenuClicked: (String) -> Unit,
+    onRenewMember: (String) -> Unit,
+    onFreezeMember: (String) -> Unit,
+    onBlockMember: (String) -> Unit,
+    onActivateMember: (String) -> Unit,
     onMemberClicked: (String) -> Unit
 ) {
     LazyColumn(
@@ -114,7 +125,14 @@ fun MembersContent(
         item { MembersStatsSection(stats) }
         item { FilterChipRow(selectedFilter, onFilterSelected) }
         items(members) { member ->
-            MemberListItem(member, onMemberMenuClicked, onMemberClicked)
+            MemberListItem(
+                member = member,
+                onRenew = onRenewMember,
+                onFreeze = onFreezeMember,
+                onBlock = onBlockMember,
+                onActivate = onActivateMember,
+                onMemberClicked = onMemberClicked
+            )
         }
         item { Spacer(modifier = Modifier.height(80.dp)) } // Space for FAB
     }
@@ -240,7 +258,14 @@ fun FilterChipRow(selected: String, onSelected: (String) -> Unit) {
 }
 
 @Composable
-fun MemberListItem(member: MemberSummary, onMenuClicked: (String) -> Unit, onMemberClicked: (String) -> Unit) {
+fun MemberListItem(
+    member: MemberSummary, 
+    onRenew: (String) -> Unit,
+    onFreeze: (String) -> Unit,
+    onBlock: (String) -> Unit,
+    onActivate: (String) -> Unit,
+    onMemberClicked: (String) -> Unit
+) {
     Card(
         colors = CardDefaults.cardColors(containerColor = GymeCardBg),
         shape = RoundedCornerShape(16.dp),
@@ -259,13 +284,68 @@ fun MemberListItem(member: MemberSummary, onMenuClicked: (String) -> Unit, onMem
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(member.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = GymeTextPrimary)
-                Text(member.plan, fontSize = 12.sp, color = GymeTextSecondary)
+                Text("ID: ${member.displayId}", fontSize = 12.sp, color = GymeTextSecondary)
             }
             Column(horizontalAlignment = Alignment.End) {
                 StatusBadge(member.status)
                 Spacer(modifier = Modifier.height(8.dp))
-                IconButton(onClick = { onMenuClicked(member.id) }, modifier = Modifier.size(24.dp)) {
-                    Icon(Icons.Default.MoreHoriz, contentDescription = null, tint = GymeTextSecondary)
+                
+                var showMenu by remember { mutableStateOf(false) }
+                
+                Box {
+                    IconButton(onClick = { showMenu = true }, modifier = Modifier.size(24.dp)) {
+                        Icon(Icons.Default.MoreHoriz, contentDescription = null, tint = GymeTextSecondary)
+                    }
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false },
+                        modifier = Modifier.background(Color.White)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Renew Membership") },
+                            onClick = { 
+                                onRenew(member.id)
+                                showMenu = false 
+                            },
+                            leadingIcon = { Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                        )
+                        if (member.status?.lowercase() == "frozen") {
+                            DropdownMenuItem(
+                                text = { Text("Unfreeze Account") },
+                                onClick = { 
+                                    onActivate(member.id)
+                                    showMenu = false 
+                                },
+                                leadingIcon = { Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(18.dp), tint = GymePrimary) }
+                            )
+                        } else if (member.status?.lowercase() == "blocked") {
+                            DropdownMenuItem(
+                                text = { Text("Unblock Member") },
+                                onClick = { 
+                                    onActivate(member.id)
+                                    showMenu = false 
+                                },
+                                leadingIcon = { Icon(Icons.Default.CheckCircle, contentDescription = null, modifier = Modifier.size(18.dp), tint = GymePrimary) }
+                            )
+                        } else {
+                            DropdownMenuItem(
+                                text = { Text("Freeze Account") },
+                                onClick = { 
+                                    onFreeze(member.id)
+                                    showMenu = false 
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.AcUnit, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Block Member") },
+                                onClick = { 
+                                    onBlock(member.id)
+                                    showMenu = false 
+                                },
+                                leadingIcon = { Icon(Icons.Outlined.Block, contentDescription = null, modifier = Modifier.size(18.dp), tint = Color.Red) }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -278,6 +358,8 @@ fun StatusBadge(status: String?) {
         "active" -> Triple(GymePrimaryLight, GymePrimary, "ACTIVE")
         "pending" -> Triple(GymePendingBg, GymePendingText, "PENDING")
         "expired" -> Triple(GymeExpiredBg, GymeExpiredText, "EXPIRED")
+        "frozen" -> Triple(Color(0xFFEAEDF0), Color(0xFF4B5563), "FROZEN")
+        "blocked" -> Triple(Color(0xFFFFE4E1), Color(0xFFDC2626), "BLOCKED")
         else -> Triple(Color.LightGray, Color.DarkGray, status?.uppercase() ?: "UNKNOWN")
     }
     Surface(shape = RoundedCornerShape(16.dp), color = bgColor) {

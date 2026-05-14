@@ -38,6 +38,8 @@ class FinanceViewModel(
                 val totalExpense = transactions.filter { it.type == "expense" }.sumOf { it.amount }
                 val netProfit = totalIncome - totalExpense
                 
+                val trendData = calculateRevenueTrend(transactions)
+                
                 val stats = FinancialStats(
                     totalRevenue = totalIncome,
                     totalExpenses = totalExpense,
@@ -49,7 +51,8 @@ class FinanceViewModel(
                     isNetProfitPositive = netProfit >= 0,
                     currentMonth = "This Month",
                     pendingExpenses = transactions.count { it.status == "pending" && it.type == "expense" },
-                    activeSubscriptions = 124 
+                    activeSubscriptions = transactions.count { it.type == "income" },
+                    revenueTrendData = trendData
                 )
                 
                 val pendingRequests = transactions.filter { it.status == "pending" && it.type == "expense" }
@@ -59,7 +62,7 @@ class FinanceViewModel(
                             description = it.description,
                             amount = it.amount,
                             date = it.createdAt,
-                            staffName = "Staff Member", // In a real app, join with users table
+                            staffName = "Staff Member", 
                             staffInitials = "SM"
                         )
                     }
@@ -68,6 +71,23 @@ class FinanceViewModel(
             } else {
                 _uiState.value = FinanceUiState.Error("Failed to load finance data")
             }
+        }
+    }
+
+    private fun calculateRevenueTrend(transactions: List<Transaction>): List<Double> {
+        val sdf = java.text.SimpleDateFormat("yyyy-MM", java.util.Locale.US)
+        val months = mutableListOf<String>()
+        
+        for (i in 5 downTo 0) {
+            val cal = java.util.Calendar.getInstance()
+            cal.add(java.util.Calendar.MONTH, -i)
+            months.add(sdf.format(cal.time))
+        }
+        
+        return months.map { month ->
+            transactions.filter { 
+                it.createdAt.startsWith(month) && it.type.equals("income", ignoreCase = true) 
+            }.sumOf { it.amount }
         }
     }
 

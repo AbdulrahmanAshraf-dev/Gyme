@@ -36,10 +36,11 @@ class MembersViewModel(
             
             val result = repository.getAll()
             if (result is ApiResult.Success) {
-                val members = result.data
-                val summaries = members.map { 
+                val sortedMembers = result.data.sortedBy { it.createdAt }
+                val summaries = sortedMembers.mapIndexed { index, it ->
                     MemberSummary(
                         id = it.id,
+                        displayId = (index + 1).toString(),
                         name = it.name,
                         plan = it.planId ?: "",
                         status = it.status,
@@ -48,10 +49,10 @@ class MembersViewModel(
                 }
                 
                 val stats = MemberStats(
-                    totalActive = members.count { it.status == "active" },
+                    totalActive = sortedMembers.count { it.status == "active" },
                     activeGrowth = "",
-                    pendingActivation = members.count { it.status == "pending" },
-                    recentlyExpired = members.count { it.status == "expired" }
+                    pendingActivation = sortedMembers.count { it.status == "pending" },
+                    recentlyExpired = sortedMembers.count { it.status == "expired" }
                 )
                 
                 _uiState.value = MembersUiState.Success(stats, summaries)
@@ -72,7 +73,38 @@ class MembersViewModel(
         }
     }
 
-    fun onMemberMenuClicked(memberId: String) {
-        // Handle menu click
+    fun renewMember(memberId: String) {
+        viewModelScope.launch {
+            // In a real app, you'd fetch the member to get the plan and current end date
+            // For now, let's assume +1 month renewal for simplicity in this quick menu
+            val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+            val calendar = java.util.Calendar.getInstance()
+            calendar.add(java.util.Calendar.MONTH, 1)
+            val newEnd = sdf.format(calendar.time)
+            
+            repository.update(id = memberId, status = "active", subscriptionEnd = newEnd)
+            loadMembersData() // Refresh list
+        }
+    }
+
+    fun freezeMember(memberId: String) {
+        viewModelScope.launch {
+            repository.update(id = memberId, status = "frozen")
+            loadMembersData()
+        }
+    }
+
+    fun blockMember(memberId: String) {
+        viewModelScope.launch {
+            repository.update(id = memberId, status = "blocked")
+            loadMembersData()
+        }
+    }
+
+    fun activateMember(memberId: String) {
+        viewModelScope.launch {
+            repository.update(id = memberId, status = "active")
+            loadMembersData()
+        }
     }
 }

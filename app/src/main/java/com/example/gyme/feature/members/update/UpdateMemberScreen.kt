@@ -94,12 +94,16 @@ fun UpdateMemberScreen(
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 // Profile Header Card
-                ProfileHeaderCard(uiState.member)
+                ProfileHeaderCard(uiState.member, uiState.displayId)
                 
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 // Admin Actions
-                AdminActionsSection()
+                AdminActionsSection(
+                    onRenew = { viewModel.renewMembership() },
+                    onFreeze = { viewModel.freezeAccount() },
+                    onBlock = { viewModel.blockMember() }
+                )
                 
                 Spacer(modifier = Modifier.height(24.dp))
                 
@@ -152,7 +156,7 @@ fun UpdateMemberScreen(
 }
 
 @Composable
-fun ProfileHeaderCard(member: Member?) {
+fun ProfileHeaderCard(member: Member?, displayId: String) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(16.dp),
@@ -171,7 +175,7 @@ fun ProfileHeaderCard(member: Member?) {
                 ) {
                     Icon(
                         Icons.Default.Person,
-                        contentDescription = null,
+                        contentDescription = "Avatar",
                         modifier = Modifier.padding(20.dp),
                         tint = GymeTextSecondary
                     )
@@ -194,16 +198,16 @@ fun ProfileHeaderCard(member: Member?) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(member?.name ?: "Loading...", fontWeight = FontWeight.Bold, fontSize = 24.sp)
-            Text("ID: ${member?.id ?: "---"}", color = GymeTextSecondary, fontSize = 14.sp)
+            Text("ID: ${displayId.ifEmpty { "---" }}", color = GymeTextSecondary, fontSize = 14.sp)
             Spacer(modifier = Modifier.height(12.dp))
             Row {
-                BadgeChip(text = "Active", containerColor = GymePrimaryLight, contentColor = GymePrimary)
+                BadgeChip(text = member?.status?.replaceFirstChar { it.uppercase() } ?: "---", containerColor = GymePrimaryLight, contentColor = GymePrimary)
                 Spacer(modifier = Modifier.width(8.dp))
-                BadgeChip(text = "Pro Plan", containerColor = GymeDarkSurface, contentColor = Color.White)
+                BadgeChip(text = member?.planId ?: "---", containerColor = GymeDarkSurface, contentColor = Color.White)
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                "${member?.sessionsThisMonth ?: 0}",
+                "0",
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
                 color = Color.Black
@@ -230,7 +234,11 @@ fun BadgeChip(text: String, containerColor: Color, contentColor: Color) {
 }
 
 @Composable
-fun AdminActionsSection() {
+fun AdminActionsSection(
+    onRenew: () -> Unit,
+    onFreeze: () -> Unit,
+    onBlock: () -> Unit
+) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(16.dp),
@@ -244,30 +252,39 @@ fun AdminActionsSection() {
                 text = "Renew Membership",
                 icon = Icons.Default.Refresh,
                 containerColor = Color(0xFFC1F1D4),
-                contentColor = Color(0xFF007A33)
+                contentColor = Color(0xFF007A33),
+                onClick = onRenew
             )
             Spacer(modifier = Modifier.height(12.dp))
             AdminActionButton(
                 text = "Freeze Account",
                 icon = Icons.Outlined.AcUnit,
                 containerColor = Color(0xFFEAEDF0),
-                contentColor = Color(0xFF4B5563)
+                contentColor = Color(0xFF4B5563),
+                onClick = onFreeze
             )
             Spacer(modifier = Modifier.height(12.dp))
             AdminActionButton(
                 text = "Block Member",
                 icon = Icons.Outlined.Block,
                 containerColor = Color(0xFFFFE4E1),
-                contentColor = Color(0xFFDC2626)
+                contentColor = Color(0xFFDC2626),
+                onClick = onBlock
             )
         }
     }
 }
 
 @Composable
-fun AdminActionButton(text: String, icon: ImageVector, containerColor: Color, contentColor: Color) {
+fun AdminActionButton(
+    text: String, 
+    icon: ImageVector, 
+    containerColor: Color, 
+    contentColor: Color,
+    onClick: () -> Unit
+) {
     Button(
-        onClick = { /* Action */ },
+        onClick = onClick,
         modifier = Modifier.fillMaxWidth().height(48.dp),
         colors = ButtonDefaults.buttonColors(containerColor = containerColor),
         shape = RoundedCornerShape(12.dp),

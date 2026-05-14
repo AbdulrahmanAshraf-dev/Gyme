@@ -9,9 +9,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.flow.StateFlow
+import java.util.Date
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,11 +27,8 @@ import com.example.gyme.core.model.DashboardStats
 import com.example.gyme.theme.*
 import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab
-import com.example.gyme.data.remote.supabaseSdk.supabase
 import com.example.gyme.util.CurrencyUtils
-import io.github.jan.supabase.auth.auth
-import java.text.NumberFormat
-import java.util.Locale
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,8 +95,11 @@ fun HomeScreen(
                     }
                 }
                 is HomeUiState.Success -> {
+                    val selectedDate = viewModel.selectedDate.collectAsState(initial = java.util.Date()).value
                     DashboardContent(
                         stats = state.stats,
+                        selectedDate = selectedDate,
+                        onDateChange = { viewModel.updateSelectedDate(it) },
                         onNavigateToAddMember = onNavigateToAddMember,
                         onNavigateToAttendance = onNavigateToAttendance,
                         onNavigateToNotifications = onNavigateToNotifications
@@ -107,13 +110,46 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardContent(
     stats: DashboardStats,
+    selectedDate: Date,
+    onDateChange: (Date) -> Unit,
     onNavigateToAddMember: () -> Unit = {},
     onNavigateToAttendance: () -> Unit = {},
     onNavigateToNotifications: () -> Unit = {}
 ) {
+    val sdf = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.US)
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = selectedDate.time
+    )
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        onDateChange(Date(it))
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK", color = GymePrimary)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel")
+                }
+            },
+            colors = DatePickerDefaults.colors(containerColor = Color.White)
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -122,7 +158,29 @@ fun DashboardContent(
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { HomeHeader(userName = stats.userName, onNavigateToNotifications = onNavigateToNotifications) }
         item { Spacer(modifier = Modifier.height(32.dp)) }
-        item { HomeGreeting(userName = stats.userName) }
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    HomeGreeting(userName = stats.userName)
+                    Text(
+                        text = sdf.format(selectedDate),
+                        color = GymeTextSecondary,
+                        fontSize = 14.sp
+                    )
+                }
+                IconButton(onClick = { showDatePicker = true }) {
+                    Icon(
+                        imageVector = Icons.Default.CalendarToday,
+                        contentDescription = "Change Date",
+                        tint = GymePrimary
+                    )
+                }
+            }
+        }
         
         item { Spacer(modifier = Modifier.height(24.dp)) }
         item { HomeQuickActions(onNavigateToAddMember, onNavigateToAttendance) }

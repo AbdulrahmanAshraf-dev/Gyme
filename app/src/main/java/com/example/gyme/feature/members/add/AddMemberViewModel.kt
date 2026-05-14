@@ -22,6 +22,7 @@ data class AddMemberUiState(
     val availablePlans: List<MembershipPlan> = emptyList(),
     val discount: String = "0",
     val discountType: String = "percentage",
+    val amountPaid: String = "",
     val isPaid: Boolean = false,
     val error: String? = null,
     val isSuccess: Boolean = false,
@@ -66,6 +67,7 @@ class AddMemberViewModel(
     fun onDiscountTypeChange(type: String) = _uiState.update { it.copy(discountType = type) }
     fun onSubscriptionStartChange(date: Date) = _uiState.update { it.copy(subscriptionStart = date) }
     fun onSubscriptionEndChange(date: Date?) = _uiState.update { it.copy(subscriptionEnd = date) }
+    fun onAmountPaidChange(amount: String) = _uiState.update { it.copy(amountPaid = amount.filter { it.isDigit() }) }
 
     fun addMember() {
         val state = _uiState.value
