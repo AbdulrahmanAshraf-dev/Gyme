@@ -26,10 +26,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.gyme.R
 import com.example.gyme.theme.GymeButtonBg
 import com.example.gyme.theme.GymeButtonText
 import com.example.gyme.theme.GymeIconTint
@@ -67,13 +69,13 @@ fun LoginScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.FitnessCenter,
-                    contentDescription = "Logo",
+                    contentDescription = stringResource(R.string.logo),
                     tint = GymeIconTint,
                     modifier = Modifier.size(26.dp)
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "Gyme",
+                    text = stringResource(R.string.app_name),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     color = HeadingColor
@@ -84,7 +86,7 @@ fun LoginScreen(
 
 
             Text(
-                text = "Welcome back",
+                text = stringResource(R.string.welcome_back_title),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = HeadingColor,
@@ -92,7 +94,7 @@ fun LoginScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Sign in to access your facility dashboard.",
+                text = stringResource(R.string.login_subtitle),
                 fontSize = 15.sp,
                 color = SubtitleColor,
                 lineHeight = 22.sp
@@ -100,7 +102,7 @@ fun LoginScreen(
 
             Spacer(Modifier.height(36.dp))
 
-            FieldLabel(text = "EMAIL ADDRESS")
+            FieldLabel(text = stringResource(R.string.email_label))
             Spacer(Modifier.height(8.dp))
             GymeTextField(
                 value = viewModel.email,
@@ -130,9 +132,9 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                FieldLabel(text = "PASSWORD")
+                FieldLabel(text = stringResource(R.string.password_label))
                 Text(
-                    text = "Forgot Password?",
+                    text = stringResource(R.string.forgot_password),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = ForgotColor,
@@ -156,7 +158,7 @@ fun LoginScreen(
                     Icon(
                         imageVector = if (viewModel.isPasswordVisible)
                             Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = "Toggle password",
+                        contentDescription = stringResource(R.string.toggle_password),
                         tint = IconColor,
                         modifier = Modifier
                             .size(22.dp)
@@ -222,7 +224,7 @@ fun LoginScreen(
                     )
                 } else {
                     Text(
-                        text = "SIGN IN",
+                        text = stringResource(R.string.sign_in_action),
                         color = GymeButtonText,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,

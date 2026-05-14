@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,13 +86,13 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
         ) {
             Icon(
                 imageVector = Icons.Default.FitnessCenter,
-                contentDescription = "Gyme logo",
+                contentDescription = stringResource(R.string.logo),
                 tint = Color.White,
                 modifier = Modifier.size(52.dp)
             )
             Spacer(Modifier.height(10.dp))
             Text(
-                text = "Gyme",
+                text = stringResource(R.string.app_name),
                 color = Color.White,
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Bold,
@@ -112,7 +113,7 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
                 .padding(top = 32.dp, bottom = 28.dp)
         ) {
             Text(
-                text = "Precision.",
+                text = stringResource(R.string.onboarding_title),
                 fontSize = 38.sp,
                 fontWeight = FontWeight.Black,
                 color = GymeTextPrimary,
@@ -120,7 +121,7 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
             )
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "The silent partner for elite fitness operators. Manage everything in one flawless view.",
+                text = stringResource(R.string.onboarding_subtitle),
                 fontSize = 15.sp,
                 color = GymeTextSecondary,
                 lineHeight = 22.sp
@@ -129,14 +130,14 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
 
             FeatureRow(
                 icon  = Icons.Default.GridView,
-                title = "Unified Dashboard",
-                desc  = "Monitor attendance, revenue, and active members instantly."
+                title = stringResource(R.string.feature_dashboard_title),
+                desc  = stringResource(R.string.feature_dashboard_desc)
             )
             Spacer(Modifier.height(24.dp))
             FeatureRow(
                 icon  = Icons.Default.QrCodeScanner,
-                title = "Frictionless Access",
-                desc  = "Lightning-fast QR check-ins to keep your lobby flowing."
+                title = stringResource(R.string.feature_access_title),
+                desc  = stringResource(R.string.feature_access_desc)
             )
 
             Spacer(Modifier.weight(1f))
@@ -150,7 +151,7 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = GymeButtonBg)
             ) {
                 Text(
-                    text          = "GET STARTED",
+                    text          = stringResource(R.string.get_started_action),
                     color         = GymeButtonText,
                     fontWeight    = FontWeight.Bold,
                     letterSpacing = 2.sp,

@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gyme.core.model.*
 import com.example.gyme.theme.*
+import androidx.compose.ui.res.stringResource
+import com.example.gyme.R
+import com.example.gyme.util.CurrencyUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,16 +39,16 @@ fun UpdateMemberScreen(
         containerColor = GymeBackground,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Update Member", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.update_member_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* Notifications */ }) {
                         BadgedBox(badge = { Badge { Text("") } }) {
-                            Icon(Icons.Outlined.Notifications, contentDescription = "Notifications")
+                            Icon(Icons.Outlined.Notifications, contentDescription = stringResource(R.string.notifications_desc))
                         }
                     }
                 },
@@ -72,7 +75,7 @@ fun UpdateMemberScreen(
                     if (uiState.isLoading) {
                         CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
                     } else {
-                        Text("Save Changes", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.save_changes_action), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -108,21 +111,21 @@ fun UpdateMemberScreen(
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 // Personal Information
-                SectionCard(title = "Personal Information") {
+                SectionCard(title = stringResource(R.string.personal_info_section)) {
                     GymeUpdateTextField(
-                        label = "Full Name",
+                        label = stringResource(R.string.full_name_label),
                         value = uiState.member?.name ?: "",
                         onValueChange = viewModel::onNameChange
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     GymeUpdateTextField(
-                        label = "Email Address",
+                        label = stringResource(R.string.email_label),
                         value = uiState.member?.email ?: "",
                         onValueChange = viewModel::onEmailChange
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     GymeUpdateTextField(
-                        label = "Phone Number",
+                        label = stringResource(R.string.phone_number_label),
                         value = uiState.member?.phone ?: "",
                         onValueChange = viewModel::onPhoneChange
                     )
@@ -175,7 +178,7 @@ fun ProfileHeaderCard(member: Member?, displayId: String) {
                 ) {
                     Icon(
                         Icons.Default.Person,
-                        contentDescription = "Avatar",
+                        contentDescription = stringResource(R.string.avatar_desc),
                         modifier = Modifier.padding(20.dp),
                         tint = GymeTextSecondary
                     )
@@ -190,7 +193,7 @@ fun ProfileHeaderCard(member: Member?, displayId: String) {
                 ) {
                     Icon(
                         Icons.Default.Check,
-                        contentDescription = "Verified",
+                        contentDescription = stringResource(R.string.verified_desc),
                         modifier = Modifier.padding(4.dp),
                         tint = GymePrimary
                     )
@@ -212,7 +215,7 @@ fun ProfileHeaderCard(member: Member?, displayId: String) {
                 fontSize = 32.sp,
                 color = Color.Black
             )
-            Text("Sessions this Month", color = GymeTextSecondary, fontSize = 14.sp)
+            Text(stringResource(R.string.sessions_this_month), color = GymeTextSecondary, fontSize = 14.sp)
         }
     }
 }
@@ -246,10 +249,10 @@ fun AdminActionsSection(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
-            Text("Admin Actions", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(stringResource(R.string.admin_actions_section), fontWeight = FontWeight.Bold, fontSize = 18.sp)
             Spacer(modifier = Modifier.height(16.dp))
             AdminActionButton(
-                text = "Renew Membership",
+                text = stringResource(R.string.renew_membership),
                 icon = Icons.Default.Refresh,
                 containerColor = Color(0xFFC1F1D4),
                 contentColor = Color(0xFF007A33),
@@ -257,7 +260,7 @@ fun AdminActionsSection(
             )
             Spacer(modifier = Modifier.height(12.dp))
             AdminActionButton(
-                text = "Freeze Account",
+                text = stringResource(R.string.freeze_account),
                 icon = Icons.Outlined.AcUnit,
                 containerColor = Color(0xFFEAEDF0),
                 contentColor = Color(0xFF4B5563),
@@ -265,7 +268,7 @@ fun AdminActionsSection(
             )
             Spacer(modifier = Modifier.height(12.dp))
             AdminActionButton(
-                text = "Block Member",
+                text = stringResource(R.string.block_member),
                 icon = Icons.Outlined.Block,
                 containerColor = Color(0xFFFFE4E1),
                 contentColor = Color(0xFFDC2626),
@@ -340,8 +343,8 @@ fun MembershipDetailsSection(
     goals: List<String>,
     onPlanChange: (MembershipPlan) -> Unit
 ) {
-    SectionCard(title = "Membership Details") {
-        Text("Current Plan", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
+    SectionCard(title = stringResource(R.string.membership_details_section)) {
+        Text(stringResource(R.string.current_plan_label), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
         Spacer(modifier = Modifier.height(8.dp))
         val currentPlan = availablePlans.find { it.id == selectedPlanId }
         Surface(
@@ -355,7 +358,7 @@ fun MembershipDetailsSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    currentPlan?.let { "${it.name} - $${it.price}/mo" } ?: "Select a plan",
+                    currentPlan?.let { "${it.name} - ${CurrencyUtils.formatEGP(it.price)}/mo" } ?: stringResource(R.string.select_plan_dropdown),
                     color = Color.Black
                 )
                 Icon(Icons.Default.UnfoldMore, contentDescription = null, tint = GymeTextSecondary)
@@ -363,7 +366,7 @@ fun MembershipDetailsSection(
         }
         
         Spacer(modifier = Modifier.height(24.dp))
-        Text("Primary Fitness Goals", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
+        Text(stringResource(R.string.fitness_goals_label), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
         Spacer(modifier = Modifier.height(12.dp))
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
@@ -395,7 +398,7 @@ fun MembershipDetailsSection(
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Add Goal", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.add_goal_action), fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -451,9 +454,9 @@ fun FlowRow(
 
 @Composable
 fun PaymentHistorySection(history: List<PaymentRecord>) {
-    SectionCard(title = "Payment History") {
+    SectionCard(title = stringResource(R.string.payment_history_section)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            Text("View Full History", color = GymePrimary, fontWeight = FontWeight.Bold, fontSize = 12.sp, modifier = Modifier.clickable { })
+            Text(stringResource(R.string.view_full_history), color = GymePrimary, fontWeight = FontWeight.Bold, fontSize = 12.sp, modifier = Modifier.clickable { })
         }
         Spacer(modifier = Modifier.height(8.dp))
         history.forEach { record ->
@@ -484,7 +487,7 @@ fun PaymentItem(record: PaymentRecord) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Check, contentDescription = null, tint = GymePrimary, modifier = Modifier.size(12.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Paid", color = GymePrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.paid_status), color = GymePrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }

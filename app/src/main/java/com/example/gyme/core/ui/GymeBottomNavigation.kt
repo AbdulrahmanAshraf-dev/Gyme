@@ -15,9 +15,11 @@ import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gyme.R
 import com.example.gyme.theme.*
 
 enum class GymeBottomTab {
@@ -38,31 +40,31 @@ fun GymeBottomNavigation(
         tonalElevation = 8.dp
     ) {
         GymeBottomNavigationItem(
-            label = "HOME",
+            label = stringResource(R.string.nav_home),
             icon = if (selectedTab == GymeBottomTab.HOME) Icons.Filled.GridView else Icons.Outlined.GridView,
             selected = selectedTab == GymeBottomTab.HOME,
             onClick = onNavigateToHome
         )
         GymeBottomNavigationItem(
-            label = "MEMBERS",
+            label = stringResource(R.string.nav_members),
             icon = if (selectedTab == GymeBottomTab.MEMBERS) Icons.Filled.People else Icons.Outlined.People,
             selected = selectedTab == GymeBottomTab.MEMBERS,
             onClick = onNavigateToMembers
         )
         GymeBottomNavigationItem(
-            label = "ATTENDANCE",
+            label = stringResource(R.string.nav_attendance),
             icon = if (selectedTab == GymeBottomTab.ATTENDANCE) Icons.Filled.QrCodeScanner else Icons.Outlined.QrCodeScanner,
             selected = selectedTab == GymeBottomTab.ATTENDANCE,
             onClick = onNavigateToAttendance
         )
         GymeBottomNavigationItem(
-            label = "FINANCE",
+            label = stringResource(R.string.nav_finance),
             icon = if (selectedTab == GymeBottomTab.FINANCE) Icons.Filled.Payments else Icons.Outlined.Payments,
             selected = selectedTab == GymeBottomTab.FINANCE,
             onClick = onNavigateToFinance
         )
         GymeBottomNavigationItem(
-            label = "MORE",
+            label = stringResource(R.string.nav_more),
             icon = if (selectedTab == GymeBottomTab.MORE) Icons.Filled.Menu else Icons.Outlined.Menu,
             selected = selectedTab == GymeBottomTab.MORE,
             onClick = onNavigateToMore

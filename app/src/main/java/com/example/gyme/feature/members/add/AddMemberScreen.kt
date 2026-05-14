@@ -21,9 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gyme.core.model.MembershipPlan
 import com.example.gyme.theme.*
+import androidx.compose.ui.res.stringResource
+import com.example.gyme.R
+import com.example.gyme.util.CurrencyUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -48,15 +50,15 @@ fun AddMemberScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Add Member", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.add_member_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* Notifications */ }) {
-                        Icon(Icons.Outlined.Notifications, contentDescription = "Notifications")
+                        Icon(Icons.Outlined.Notifications, contentDescription = stringResource(R.string.notifications_desc))
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -85,7 +87,7 @@ fun AddMemberScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.PersonAdd, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Add Member", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.add_member_title), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -105,9 +107,9 @@ fun AddMemberScreen(
             Spacer(modifier = Modifier.height(32.dp))
             
             // Personal Information Section
-            SectionCard(title = "Personal Information") {
+            SectionCard(title = stringResource(R.string.personal_info_section)) {
                 GymeTextField(
-                    label = "FULL NAME",
+                    label = stringResource(R.string.full_name_label),
                     value = uiState.name,
                     onValueChange = viewModel::onFullNameChange,
                     placeholder = "e.g. Alex Johnson"
@@ -127,17 +129,17 @@ fun AddMemberScreen(
             Spacer(modifier = Modifier.height(24.dp))
             
             // Subscription Section
-            SectionCard(title = "Subscription", badge = "UNPAID") {
+            SectionCard(title = stringResource(R.string.subscription_section), badge = stringResource(R.string.unpaid_badge)) {
                 PlanSelector(uiState.selectedPlan, uiState.availablePlans, viewModel::onPlanChange)
                 Spacer(modifier = Modifier.height(16.dp))
                 DatePickerField(
-                    label = "SUBSCRIPTION START",
+                    label = stringResource(R.string.sub_start_label),
                     date = uiState.subscriptionStart,
                     onDateSelected = viewModel::onSubscriptionStartChange
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 DatePickerField(
-                    label = "SUBSCRIPTION END",
+                    label = stringResource(R.string.sub_end_label),
                     date = uiState.subscriptionEnd,
                     onDateSelected = viewModel::onSubscriptionEndChange
                 )
@@ -194,7 +196,7 @@ fun ProfileImagePicker(id: String) {
             ) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = "Add Photo",
+                    contentDescription = stringResource(R.string.add_photo),
                     modifier = Modifier.padding(6.dp),
                     tint = Color.White
                 )
@@ -207,7 +209,7 @@ fun ProfileImagePicker(id: String) {
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    "NEW MEMBER",
+                    stringResource(R.string.new_member_badge),
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     color = GymePrimary,
                     fontSize = 12.sp,
@@ -230,7 +232,7 @@ fun ProfileImagePicker(id: String) {
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            "Fill out the information below to register\na new member to the gym.",
+            stringResource(R.string.add_member_hint),
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             color = GymeTextSecondary,
             fontSize = 14.sp
@@ -308,7 +310,7 @@ fun GymeTextField(label: String, value: String, onValueChange: (String) -> Unit,
 @Composable
 fun PhoneNumberField(value: String, onValueChange: (String) -> Unit) {
     Column {
-        Text("PHONE NUMBER", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
+        Text(stringResource(R.string.phone_number_label), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
         Spacer(modifier = Modifier.height(8.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Surface(
@@ -346,7 +348,7 @@ fun PhoneNumberField(value: String, onValueChange: (String) -> Unit) {
 @Composable
 fun GenderSelector(selected: String, onGenderChange: (String) -> Unit) {
     Column {
-        Text("GENDER", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
+        Text(stringResource(R.string.gender_label), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
         Spacer(modifier = Modifier.height(8.dp))
         Surface(
             color = GymeDivider,
@@ -363,7 +365,7 @@ fun GenderSelector(selected: String, onGenderChange: (String) -> Unit) {
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            gender.replaceFirstChar { it.uppercase() },
+                            if (gender == "male") stringResource(R.string.gender_male) else stringResource(R.string.gender_female),
                             modifier = Modifier.padding(vertical = 12.dp),
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
@@ -420,12 +422,12 @@ fun DatePickerField(label: String, date: Date?, onDateSelected: (Date) -> Unit =
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK", color = GymePrimary)
+                    Text(stringResource(R.string.ok), color = GymePrimary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel", color = GymeTextSecondary)
+                    Text(stringResource(R.string.cancel), color = GymeTextSecondary)
                 }
             },
             colors = DatePickerDefaults.colors(containerColor = Color.White)
@@ -440,7 +442,7 @@ fun PlanSelector(selected: MembershipPlan?, plans: List<MembershipPlan>, onPlanC
     var showDialog by remember { mutableStateOf(false) }
     
     Column {
-        Text("SELECT PLAN", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
+        Text(stringResource(R.string.select_plan_label), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextSecondary)
         Spacer(modifier = Modifier.height(8.dp))
         Surface(
             color = GymeDivider,
@@ -455,7 +457,7 @@ fun PlanSelector(selected: MembershipPlan?, plans: List<MembershipPlan>, onPlanC
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = selected?.let { "${it.name} ($${it.price})" } ?: "Select a membership plan...",
+                    text = selected?.let { "${it.name} (${CurrencyUtils.formatEGP(it.price)})" } ?: stringResource(R.string.select_plan_hint),
                     color = if (selected != null) Color.Black else GymeTextSecondary
                 )
                 Icon(Icons.Default.ArrowDropDown, contentDescription = null, tint = GymeTextSecondary)
@@ -466,7 +468,7 @@ fun PlanSelector(selected: MembershipPlan?, plans: List<MembershipPlan>, onPlanC
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text("Select Membership Plan", fontWeight = FontWeight.Bold) },
+            title = { Text(stringResource(R.string.select_plan_title), fontWeight = FontWeight.Bold) },
             text = {
                 LazyColumn {
                     items(plans) { plan ->
@@ -499,7 +501,7 @@ fun PlanSelector(selected: MembershipPlan?, plans: List<MembershipPlan>, onPlanC
             confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { showDialog = false }) {
-                    Text("Cancel", color = GymePrimary)
+                    Text(stringResource(R.string.cancel), color = GymePrimary)
                 }
             },
             containerColor = Color.White,
@@ -527,13 +529,13 @@ fun PaymentSummary(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Outlined.Assignment, contentDescription = null, tint = Color.White)
                 Spacer(modifier = Modifier.width(12.dp))
-                Text("Payment Summary", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.payment_summary_title), color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }
             Spacer(modifier = Modifier.height(32.dp))
             
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Subtotal", color = Color.White.copy(alpha = 0.5f), fontSize = 16.sp)
-                Text("$${String.format("%.2f", subtotal)}", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.subtotal_label), color = Color.White.copy(alpha = 0.5f), fontSize = 16.sp)
+                Text(CurrencyUtils.formatEGP(subtotal), color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
             
             Spacer(modifier = Modifier.height(24.dp))
@@ -545,7 +547,7 @@ fun PaymentSummary(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Discount", color = Color.White.copy(alpha = 0.5f), fontSize = 16.sp)
+                Text(stringResource(R.string.discount_label), color = Color.White.copy(alpha = 0.5f), fontSize = 16.sp)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Surface(
                         color = Color.White.copy(alpha = 0.1f),
@@ -596,7 +598,7 @@ fun PaymentSummary(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Amount Paid", color = Color.White.copy(alpha = 0.5f), fontSize = 16.sp)
+                Text(stringResource(R.string.amount_paid_label), color = Color.White.copy(alpha = 0.5f), fontSize = 16.sp)
                 androidx.compose.foundation.text.BasicTextField(
                     value = amountPaid,
                     onValueChange = onAmountPaidChange,
@@ -615,7 +617,7 @@ fun PaymentSummary(
                         Box(contentAlignment = Alignment.CenterEnd) {
                             if (amountPaid.isEmpty()) {
                                 Text(
-                                    "Enter Amount", 
+                                    stringResource(R.string.enter_amount_hint), 
                                     color = Color.White.copy(alpha = 0.3f),
                                     fontSize = 14.sp
                                 )
@@ -632,7 +634,7 @@ fun PaymentSummary(
             
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column {
-                    Text("Total Due", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.total_due_label), color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     val totalDue = if (discountType == "percentage") {
                         subtotal * (1 - (discount.toDoubleOrNull() ?: 0.0) / 100)
                     } else {
@@ -641,7 +643,7 @@ fun PaymentSummary(
                     val paid = amountPaid.toDoubleOrNull() ?: 0.0
                     val debt = totalDue - paid
                     if (debt > 0) {
-                        Text("Debt: ${com.example.gyme.util.CurrencyUtils.formatEGP(debt)}", color = GymeError, fontSize = 12.sp)
+                        Text(stringResource(R.string.debt_label, CurrencyUtils.formatEGP(debt)), color = GymeError, fontSize = 12.sp)
                     }
                 }
                 
@@ -650,7 +652,7 @@ fun PaymentSummary(
                 } else {
                     subtotal - (discount.toDoubleOrNull() ?: 0.0)
                 }
-                Text(com.example.gyme.util.CurrencyUtils.formatEGP(finalDisplay), color = GymePrimaryLight, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
+                Text(CurrencyUtils.formatEGP(finalDisplay), color = GymePrimaryLight, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
             }
         }
     }

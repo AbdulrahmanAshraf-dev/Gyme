@@ -343,7 +343,7 @@ fun ScannerHeader() {
             }
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Gym Manager",
+                text = stringResource(R.string.gym_manager),
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold

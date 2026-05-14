@@ -73,7 +73,7 @@ fun MoreScreen(
             // Section: Manage Plans
             item {
                 Text(
-                    "Manage Plans",
+                    stringResource(R.string.manage_plans),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = GymeTextPrimary,
@@ -82,14 +82,14 @@ fun MoreScreen(
             }
             item {
                 MoreMenuItem(
-                    title = "Membership Plans",
+                    title = stringResource(R.string.membership_plans),
                     icon = Icons.Outlined.CreditCard,
                     onClick = onNavigateToPlans
                 )
             }
             item {
                 MoreMenuItem(
-                    title = "Gym Services",
+                    title = stringResource(R.string.gym_services),
                     icon = Icons.Outlined.List,
                     onClick = { /* TODO */ }
                 )
@@ -99,7 +99,7 @@ fun MoreScreen(
             
             item {
                 Text(
-                    "Gym Settings",
+                    stringResource(R.string.gym_settings),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = GymeTextPrimary,
@@ -108,14 +108,14 @@ fun MoreScreen(
             }
             item {
                 MoreMenuItem(
-                    title = "Attendance QR Code",
+                    title = stringResource(R.string.attendance_qr_code),
                     icon = Icons.Outlined.QrCode,
                     onClick = { /* TODO */ }
                 )
             }
             item {
                 MoreMenuItem(
-                    title = stringResource(R.string.staff_management),
+                    title = stringResource(R.string.staff_management_title),
                     icon = Icons.Outlined.People,
                     onClick = onNavigateToStaff
                 )
@@ -123,7 +123,7 @@ fun MoreScreen(
             item {
                 MoreMenuItem(
                     title = stringResource(R.string.language_settings),
-                    subtitle = if (currentLanguage == LanguageManager.ENGLISH) "English" else "العربية",
+                    subtitle = if (currentLanguage == LanguageManager.ENGLISH) stringResource(R.string.english) else stringResource(R.string.arabic),
                     icon = Icons.Outlined.Language,
                     onClick = { showLanguageDialog = true }
                 )
@@ -170,7 +170,7 @@ fun MoreHeader(onNavigateToNotifications: () -> Unit) {
                 Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.padding(8.dp), tint = Color.White)
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Text("Gym Manager", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = GymeTextPrimary)
+            Text(stringResource(R.string.gym_manager), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = GymeTextPrimary)
         }
         IconButton(onClick = onNavigateToNotifications) {
             Icon(Icons.Outlined.Notifications, contentDescription = null, tint = GymeTextPrimary)
@@ -239,12 +239,12 @@ fun LanguageSelectionDialog(
         text = {
             Column {
                 LanguageOption(
-                    title = "English",
+                    title = stringResource(R.string.english),
                     isSelected = currentLanguage == LanguageManager.ENGLISH,
                     onClick = { onLanguageSelected(LanguageManager.ENGLISH) }
                 )
                 LanguageOption(
-                    title = "العربية",
+                    title = stringResource(R.string.arabic),
                     isSelected = currentLanguage == LanguageManager.ARABIC,
                     onClick = { onLanguageSelected(LanguageManager.ARABIC) }
                 )

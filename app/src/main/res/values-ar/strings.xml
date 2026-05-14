@@ -1,6 +1,6 @@
 <resources>
     <!-- General -->
-    <string name="app_name">جايم</string>
+    <string name="app_name">جيم</string>
     <string name="back">عودة</string>
     <string name="save">حفظ</string>
     <string name="cancel">إلغاء</string>
@@ -34,7 +34,37 @@
     <string name="appearance">المظهر</string>
     <string name="dark_mode">الوضع الداكن</string>
     <string name="notifications">مركز التنبيهات</string>
-    <string name="staff_management">إدارة الموظفين</string>
+    <string name="staff_management_title">إدارة الموظفين</string>
+    <string name="staff_management_subtitle">الإشراف على أدوار الفريق، وتعديل مستويات الوصول إلى النظام، ومراقبة مؤشرات الأداء الرئيسية عبر منشأتك.</string>
+    <string name="add_staff">إضافة موظف</string>
+    <string name="create_staff_account">إنشاء حساب موظف</string>
+    <string name="create_staff_subtitle">أدخل التفاصيل وقم بتعيين الصلاحيات للموظف الجديد.</string>
+    <string name="total_active_staff">إجمالي الموظفين النشطين</string>
+    <string name="on_shift_now">في الوردية الآن</string>
+    <string name="active_sessions_label">الجلسات النشطة</string>
+    <string name="requires_review_label">يتطلب مراجعة</string>
+    <string name="pending_requests">طلبات معلقة</string>
+    <string name="filter_label">تصفية</string>
+    <string name="sort_role_label">ترتيب: الدور</string>
+    <string name="top_performing_trainer">أفضل مدرب أداءً</string>
+    <string name="search_staff_placeholder">البحث عن الموظفين بالاسم أو الدور...</string>
+    <string name="avg_rating">%1$s متوسط التقييم</string>
+    <string name="system_access">الوصول إلى النظام</string>
+    <string name="account_active">الحساب نشط</string>
+    <string name="account_blocked">الحساب محظور</string>
+    <string name="permissions">الصلاحيات</string>
+    <string name="add_members_perm">إضافة أعضاء</string>
+    <string name="edit_members_perm">تعديل الأعضاء</string>
+    <string name="delete_members_perm">حذف الأعضاء</string>
+    <string name="manage_finance_perm">إدارة المالية</string>
+    <string name="create_account">إنشاء حساب</string>
+    <string name="full_name">الاسم الكامل</string>
+    <string name="email_address">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="initial_permissions">الصلاحيات الأولية</string>
+    <string name="delete">حذف</string>
+    <string name="gym_manager">مدير النادي</string>
+    <string name="login_as_admin">تسجيل الدخول كأدمن</string>
     <string name="help_support">المساعدة والدعم</string>
     <string name="logout">تسجيل الخروج</string>
 
@@ -46,8 +76,166 @@
     <string name="welcome_back">مرحباً بعودتك، %1$s!</string>
     <string name="subscription_expired">الاشتراك منتهي</string>
     <string name="renewal_required">يجب على العضو التجديد في مكتب الاستقبال.</string>
+    <string name="error_checkin_failed">فشل تسجيل الدخول</string>
+    <string name="error_member_not_found">العضو غير موجود</string>
 
-    <!-- Empty States -->
+    <!-- Members -->
+    <string name="add_member">إضافة عضو</string>
+    <string name="filter">تصفية</string>
+    <string name="sort_role">ترتيب: الدور</string>
+    <string name="filter_active_only">نشط فقط</string>
+    <string name="filter_vip_plan">خطة VIP</string>
+    <string name="filter_all">جميع الأعضاء</string>
+    <string name="stat_total_active">إجمالي النشطين</string>
+    <string name="stat_pending_activation">في انتظار التفعيل</string>
+    <string name="stat_recently_expired">انتهى حديثاً</string>
+    <string name="search_members_placeholder">البحث عن الأعضاء بالاسم أو المعرف...</string>
+    <string name="manage_member_status">إدارة حالة العضو</string>
+    <string name="plan_details">تفاصيل الخطة</string>
+    <string name="action_renew">تجديد</string>
+    <string name="action_freeze">تجميد</string>
+    <string name="action_activate">تفعيل</string>
+    <string name="action_block">حظر</string>
+    <string name="member_management">إدارة الأعضاء</string>
+    <string name="member_management_subtitle">تتبع مجتمعك، وقم بإدارة الاشتراكات، ومراقبة نمو الحضور بفعالية.</string>
+    <string name="recently_added">أضيف مؤخراً</string>
+    <string name="attendance_growth">نمو الحضور</string>
+    <string name="member_roster">قائمة الأعضاء</string>
+    <string name="member_roster_subtitle">إدارة الاشتراكات، تتبع الحالات، والحفاظ على الدقة التشغيلية لمنشأتك.</string>
+    <string name="logo">شعار</string>
+    <string name="notifications_desc">التنبيهات</string>
+    <string name="renew_membership">تجديد العضوية</string>
+    <string name="unfreeze_account">إلغاء تجميد الحساب</string>
+    <string name="unblock_member">إلغاء حظر العضو</string>
+    <string name="freeze_account">تجميد الحساب</string>
+    <string name="block_member">حظر العضو</string>
+    <string name="status_active">نشط</string>
+    <string name="status_pending">معلق</string>
+    <string name="status_expired">منتهي</string>
+    <string name="status_frozen">مجمد</string>
+    <string name="status_blocked">محظور</string>
+    <string name="status_unknown">غير معروف</string>
+
+    <!-- Home -->
+    <string name="overview">نظرة عامة</string>
+    <string name="change_date">تغيير التاريخ</string>
+    <string name="new_member_action">عضو جديد</string>
+    <string name="scan_id_action">مسح الهوية</string>
+    <string name="today_revenue_label">دخل اليوم</string>
+    <string name="vs_last_week">مقارنة بنفس اليوم الأسبوع الماضي (%1$s)</string>
+    <string name="currently_active_label">نشط حالياً</string>
+    <string name="capacity_description">%1$s%% من متوسط السعة اليومية</string>
+    <string name="member_status_label">حالة الأعضاء</string>
+    <string name="active_members_label">الأعضاء النشطين</string>
+    <string name="expiring_soon_label">تنتهي خلال &lt; 7 أيام</string>
+    <string name="expired_month_label">انتهى هذا الشهر</string>
+    <string name="good_morning_greeting">صباح الخير،\n%1$s</string>
+    <string name="ok">موافق</string>
+    <string name="manage_plans">إدارة الخطط</string>
+    <string name="membership_plans">خطط العضوية</string>
+    <string name="gym_services">خدمات النادي</string>
+    <string name="gym_settings">إعدادات النادي</string>
+    <string name="attendance_qr_code">رمز QR للحضور</string>
+
+    <!-- Login -->
+    <string name="welcome_back_title">مرحباً بعودتك</string>
+    <string name="login_subtitle">قم بتسجيل الدخول للوصول إلى لوحة تحكم منشأتك.</string>
+    <string name="email_label">البريد الإلكتروني</string>
+    <string name="password_label">كلمة المرور</string>
+    <string name="forgot_password">نسيت كلمة المرور؟</string>
+    <string name="sign_in_action">تسجيل الدخول</string>
+    <string name="toggle_password">إظهار/إخفاء كلمة المرور</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">الدقة.</string>
+    <string name="onboarding_subtitle">الشريك الصامت لمشغلي اللياقة البدنية النخبة. أدر كل شيء في عرض واحد مثالي.</string>
+    <string name="feature_dashboard_title">لوحة تحكم موحدة</string>
+    <string name="feature_dashboard_desc">راقب الحضور والدخل والأعضاء النشطين فوراً.</string>
+    <string name="feature_access_title">دخول سلس</string>
+    <string name="feature_access_desc">تسجيل حضور سريع عبر رمز QR للحفاظ على انسيابية صالتك.</string>
+    <string name="get_started_action">ابدأ الآن</string>
+
+    <!-- Add Member -->
+    <string name="add_member_title">إضافة عضو</string>
+    <string name="personal_info_section">المعلومات الشخصية</string>
+    <string name="full_name_label">الاسم الكامل</string>
+    <string name="phone_number_label">رقم الهاتف</string>
+    <string name="gender_label">الجنس</string>
+    <string name="sub_start_label">بداية الاشتراك</string>
+    <string name="sub_end_label">نهاية الاشتراك</string>
+    <string name="subscription_section">الاشتراك</string>
+    <string name="unpaid_badge">غير مدفوع</string>
+    <string name="add_member_hint">قم بتعبئة المعلومات أدناه لتسجيل\nعضو جديد في النادي.</string>
+    <string name="select_plan_label">اختر الخطة</string>
+    <string name="select_plan_title">اختر خطة الاشتراك</string>
+    <string name="payment_summary_title">ملخص الدفع</string>
+    <string name="subtotal_label">المجموع الفرعي</string>
+    <string name="discount_label">الخصم</string>
+    <string name="amount_paid_label">المبلغ المدفوع</string>
+    <string name="total_due_label">إجمالي المستحق</string>
+    <string name="enter_amount_hint">أدخل المبلغ</string>
+    <string name="debt_label">الدين: %1$s</string>
+    <string name="gender_male">ذكر</string>
+    <string name="gender_female">أنثى</string>
+    <string name="select_plan_hint">اختر خطة اشتراك...</string>
+    <string name="add_photo">إضافة صورة العضو</string>
+    <string name="new_member_badge">عضو جديد</string>
+
+    <!-- Update Member -->
+    <string name="update_member_title">تحديث العضو</string>
+    <string name="save_changes_action">حفظ التغييرات</string>
+    <string name="sessions_this_month">جلسات هذا الشهر</string>
+    <string name="admin_actions_section">إجراءات المسؤول</string>
+    <string name="membership_details_section">تفاصيل العضوية</string>
+    <string name="current_plan_label">الخطة الحالية</string>
+    <string name="select_plan_dropdown">اختر خطة</string>
+    <string name="fitness_goals_label">الأهداف الرياضية الأساسية</string>
+    <string name="add_goal_action">إضافة هدف</string>
+    <string name="payment_history_section">سجل المدفوعات</string>
+    <string name="view_full_history">عرض السجل الكامل</string>
+    <string name="paid_status">مدفوع</string>
+    <string name="verified_desc">موثق</string>
+    <string name="avatar_desc">الصورة الرمزية للعضو</string>
+    <string name="retry_action">إعادة المحاولة</string>
+    <string name="requires_action_label">يتطلب إجراء</string>
+    <string name="past_7_days_label">آخر 7 أيام</string>
+
+    <!-- Finance -->
+    <string name="finance_title">نظرة عامة مالية</string>
+    <string name="finance_subtitle">تتبع الإيرادات الشهرية، وإدارة المصروفات، والموافقة على طلبات الموظفين.</string>
+    <string name="total_revenue_label">إجمالي الإيرادات</string>
+    <string name="total_expenses_label">إجمالي المصروفات</string>
+    <string name="net_profit_label">صافي الربح</string>
+    <string name="revenue_trend_title">اتجاه الإيرادات</string>
+    <string name="weekly_filter">أسبوعي</string>
+    <string name="monthly_filter">شهري</string>
+    <string name="pending_approvals_title">الموافقات المعلقة</string>
+    <string name="view_all_requests_action">عرض كافة الطلبات</string>
+    <string name="approve_action">موافقة</string>
+    <string name="review_action">مراجعة</string>
+    <string name="new_requests_badge">%1$s جديد</string>
+
+    <!-- Plans -->
+    <string name="plans_title">الخطط</string>
+    <string name="add_plan_action">إضافة خطة</string>
+    <string name="edit_plan_title">تعديل الخطة</string>
+    <string name="plan_name_label">اسم الخطة</string>
+    <string name="complete_amount_label">المبلغ الإجمالي</string>
+    <string name="duration_label">المدة</string>
+    <string name="duration_months_text">%1$s شهور</string>
+    <string name="price_egp_label">السعر (ج.م)</string>
+    <string name="duration_months_label">المدة (بالشهور)</string>
+    <string name="confirm_action">تأكيد</string>
+    <string name="delete_plan">حذف الخطة</string>
+
+    <!-- Notifications -->
+    <string name="notification_center_title">مركز التنبيهات</string>
+    <string name="end_of_history">نهاية السجل</string>
+    <string name="filter_unread">غير مقروء</string>
+    <string name="badge_action_required">يتطلب إجراء</string>
+    <string name="badge_billing">الفواتير</string>
     <string name="caught_up_title">أنت على اطلاع بكل شيء</string>
     <string name="caught_up_subtitle">لا توجد تنبيهات جديدة لعرضها الآن.\nاستمتع بسير عملك المركز.</string>
+    <string name="profile_desc">الملف الشخصي</string>
+
 </resources>

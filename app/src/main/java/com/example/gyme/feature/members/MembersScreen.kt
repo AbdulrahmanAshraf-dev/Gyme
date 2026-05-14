@@ -21,7 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.gyme.R
 import com.example.gyme.core.model.MemberStats
 import com.example.gyme.core.model.MemberSummary
 import com.example.gyme.theme.*
@@ -55,7 +57,7 @@ fun MembersScreen(
                 contentColor = Color.White,
                 shape = RoundedCornerShape(12.dp),
                 icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                text = { Text("ADD MEMBER", fontWeight = FontWeight.Bold) }
+                text = { Text(stringResource(R.string.add_member), fontWeight = FontWeight.Bold) }
             )
         },
         bottomBar = {
@@ -153,16 +155,16 @@ fun MembersTopBar(onNavigateToNotifications: () -> Unit = {}) {
             ) {
                 Icon(
                     imageVector = Icons.Default.FitnessCenter,
-                    contentDescription = "Logo",
+                    contentDescription = stringResource(R.string.logo),
                     tint = Color.White,
                     modifier = Modifier.padding(8.dp)
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Text("Gym Manager", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = GymeTextPrimary)
+            Text(stringResource(R.string.gym_manager), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = GymeTextPrimary)
         }
         IconButton(onClick = onNavigateToNotifications) {
-            Icon(Icons.Outlined.Notifications, contentDescription = "Notifications", tint = GymeTextPrimary)
+            Icon(Icons.Outlined.Notifications, contentDescription = stringResource(R.string.notifications_desc), tint = GymeTextPrimary)
         }
     }
 }
@@ -170,10 +172,10 @@ fun MembersTopBar(onNavigateToNotifications: () -> Unit = {}) {
 @Composable
 fun MembersPageHeader() {
     Column {
-        Text("Member Roster", fontWeight = FontWeight.ExtraBold, fontSize = 32.sp, color = GymeTextPrimary)
+        Text(stringResource(R.string.member_roster), fontWeight = FontWeight.ExtraBold, fontSize = 32.sp, color = GymeTextPrimary)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "Manage memberships, track statuses, and maintain your facility's operational precision.",
+            stringResource(R.string.member_roster_subtitle),
             fontSize = 14.sp, color = GymeTextSecondary, lineHeight = 20.sp
         )
     }
@@ -186,7 +188,7 @@ fun MembersSearchBar(query: String, onQueryChanged: (String) -> Unit) {
         value = query,
         onValueChange = onQueryChanged,
         modifier = Modifier.fillMaxWidth().height(56.dp).clip(RoundedCornerShape(12.dp)),
-        placeholder = { Text("Search members by name or ID...", color = GymeTextSecondary, fontSize = 14.sp) },
+        placeholder = { Text(stringResource(R.string.search_members_placeholder), color = GymeTextSecondary, fontSize = 14.sp) },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = GymeTextSecondary) },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = GymeDivider,
@@ -203,7 +205,7 @@ fun MembersSearchBar(query: String, onQueryChanged: (String) -> Unit) {
 fun MembersStatsSection(stats: MemberStats) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         GymeStatCard(
-            title = "TOTAL ACTIVE",
+            title = stringResource(R.string.stat_total_active),
             value = stats.totalActive.toString(),
             subtext = stats.activeGrowth,
             isPositive = true,
@@ -212,18 +214,18 @@ fun MembersStatsSection(stats: MemberStats) {
             iconBgColor = GymePrimaryLight
         )
         GymeStatCard(
-            title = "PENDING ACTIVATION",
+            title = stringResource(R.string.stat_pending_activation),
             value = stats.pendingActivation.toString(),
-            subtext = "Requires action",
+            subtext = stringResource(R.string.requires_action_label),
             isPositive = null,
             icon = Icons.Default.HourglassEmpty,
             iconColor = GymeTextSecondary,
             iconBgColor = GymeDivider
         )
         GymeStatCard(
-            title = "RECENTLY EXPIRED",
+            title = stringResource(R.string.stat_recently_expired),
             value = stats.recentlyExpired.toString(),
-            subtext = "Past 7 days",
+            subtext = stringResource(R.string.past_7_days_label),
             isPositive = null,
             icon = Icons.Default.History,
             iconColor = GymeTextSecondary,
@@ -234,9 +236,13 @@ fun MembersStatsSection(stats: MemberStats) {
 
 @Composable
 fun FilterChipRow(selected: String, onSelected: (String) -> Unit) {
-    val filters = listOf("All Members", "Active Only", "VIP Plan")
+    val filters = listOf(
+        stringResource(R.string.filter_all) to "All Members",
+        stringResource(R.string.filter_active_only) to "Active Only",
+        stringResource(R.string.filter_vip_plan) to "VIP Plan"
+    )
     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(filters) { filter ->
+        items(filters) { (label, filter) ->
             val isSelected = selected == filter
             Surface(
                 onClick = { onSelected(filter) },
@@ -246,7 +252,7 @@ fun FilterChipRow(selected: String, onSelected: (String) -> Unit) {
             ) {
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(horizontal = 16.dp)) {
                     Text(
-                        filter,
+                        label,
                         color = if (isSelected) Color.White else GymeTextPrimary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
@@ -302,7 +308,7 @@ fun MemberListItem(
                         modifier = Modifier.background(Color.White)
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Renew Membership") },
+                            text = { Text(stringResource(R.string.renew_membership)) },
                             onClick = { 
                                 onRenew(member.id)
                                 showMenu = false 
@@ -311,7 +317,7 @@ fun MemberListItem(
                         )
                         if (member.status?.lowercase() == "frozen") {
                             DropdownMenuItem(
-                                text = { Text("Unfreeze Account") },
+                                text = { Text(stringResource(R.string.unfreeze_account)) },
                                 onClick = { 
                                     onActivate(member.id)
                                     showMenu = false 
@@ -320,7 +326,7 @@ fun MemberListItem(
                             )
                         } else if (member.status?.lowercase() == "blocked") {
                             DropdownMenuItem(
-                                text = { Text("Unblock Member") },
+                                text = { Text(stringResource(R.string.unblock_member)) },
                                 onClick = { 
                                     onActivate(member.id)
                                     showMenu = false 
@@ -329,7 +335,7 @@ fun MemberListItem(
                             )
                         } else {
                             DropdownMenuItem(
-                                text = { Text("Freeze Account") },
+                                text = { Text(stringResource(R.string.freeze_account)) },
                                 onClick = { 
                                     onFreeze(member.id)
                                     showMenu = false 
@@ -337,7 +343,7 @@ fun MemberListItem(
                                 leadingIcon = { Icon(Icons.Outlined.AcUnit, contentDescription = null, modifier = Modifier.size(18.dp)) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Block Member") },
+                                text = { Text(stringResource(R.string.block_member)) },
                                 onClick = { 
                                     onBlock(member.id)
                                     showMenu = false 
@@ -354,17 +360,17 @@ fun MemberListItem(
 
 @Composable
 fun StatusBadge(status: String?) {
-    val (bgColor, textColor, label) = when (status?.lowercase()) {
-        "active" -> Triple(GymePrimaryLight, GymePrimary, "ACTIVE")
-        "pending" -> Triple(GymePendingBg, GymePendingText, "PENDING")
-        "expired" -> Triple(GymeExpiredBg, GymeExpiredText, "EXPIRED")
-        "frozen" -> Triple(Color(0xFFEAEDF0), Color(0xFF4B5563), "FROZEN")
-        "blocked" -> Triple(Color(0xFFFFE4E1), Color(0xFFDC2626), "BLOCKED")
-        else -> Triple(Color.LightGray, Color.DarkGray, status?.uppercase() ?: "UNKNOWN")
+    val (bgColor, textColor, labelRes) = when (status?.lowercase()) {
+        "active" -> Triple(GymePrimaryLight, GymePrimary, R.string.status_active)
+        "pending" -> Triple(GymePendingBg, GymePendingText, R.string.status_pending)
+        "expired" -> Triple(GymeExpiredBg, GymeExpiredText, R.string.status_expired)
+        "frozen" -> Triple(Color(0xFFEAEDF0), Color(0xFF4B5563), R.string.status_frozen)
+        "blocked" -> Triple(Color(0xFFFFE4E1), Color(0xFFDC2626), R.string.status_blocked)
+        else -> Triple(Color.LightGray, Color.DarkGray, R.string.status_unknown)
     }
     Surface(shape = RoundedCornerShape(16.dp), color = bgColor) {
         Text(
-            label,
+            stringResource(labelRes),
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold,

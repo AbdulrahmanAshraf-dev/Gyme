@@ -25,6 +25,8 @@ import com.example.gyme.core.ui.GymeBottomTab
 import com.example.gyme.core.model.Notification
 import com.example.gyme.core.model.NotificationType
 import com.example.gyme.theme.*
+import androidx.compose.ui.res.stringResource
+import com.example.gyme.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,14 +105,14 @@ fun NotificationsTopBar(onNavigateBack: () -> Unit) {
             ) {
                 Icon(
                     imageVector = Icons.Default.Person,
-                    contentDescription = "Profile",
+                    contentDescription = stringResource(R.string.profile_desc),
                     modifier = Modifier.padding(8.dp),
                     tint = Color.White
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Gym Manager",
+                text = stringResource(R.string.gym_manager),
                 color = GymeTextPrimary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
@@ -120,7 +122,7 @@ fun NotificationsTopBar(onNavigateBack: () -> Unit) {
         Box {
             Icon(
                 imageVector = Icons.Outlined.Notifications,
-                contentDescription = "Notifications",
+                contentDescription = stringResource(R.string.notifications_desc),
                 tint = GymeTextPrimary,
                 modifier = Modifier.size(24.dp)
             )
@@ -147,7 +149,7 @@ fun NotificationsContent(
     ) {
         item {
             Text(
-                text = "Notification Center",
+                text = stringResource(R.string.notification_center_title),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = GymeTextPrimary,
@@ -174,7 +176,7 @@ fun NotificationsContent(
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "END OF HISTORY",
+                        text = stringResource(R.string.end_of_history),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = GymeTextSecondary.copy(alpha = 0.6f),
@@ -196,12 +198,12 @@ fun FilterRow(selected: NotificationFilter, onSelected: (NotificationFilter) -> 
             .padding(4.dp)
     ) {
         FilterChip(
-            text = "All",
+            text = stringResource(R.string.filter_all),
             isSelected = selected == NotificationFilter.ALL,
             onClick = { onSelected(NotificationFilter.ALL) }
         )
         FilterChip(
-            text = "Unread",
+            text = stringResource(R.string.filter_unread),
             isSelected = selected == NotificationFilter.UNREAD,
             onClick = { onSelected(NotificationFilter.UNREAD) }
         )
@@ -240,10 +242,10 @@ fun NotificationCard(notification: Notification) {
 
     val style = when (notification.type) {
         NotificationType.SUBSCRIPTION -> NotificationStyle(
-            Icons.Default.CalendarToday, GymePrimaryLight, GymePrimary, "Action Required", GymePrimaryLight, GymePrimary
+            Icons.Default.CalendarToday, GymePrimaryLight, GymePrimary, stringResource(R.string.badge_action_required), GymePrimaryLight, GymePrimary
         )
         NotificationType.PAYMENT -> NotificationStyle(
-            Icons.Default.Wallet, GymePendingBg, GymePendingText, "Billing", GymeDivider, GymeTextSecondary
+            Icons.Default.Wallet, GymePendingBg, GymePendingText, stringResource(R.string.badge_billing), GymeDivider, GymeTextSecondary
         )
         NotificationType.SYSTEM -> NotificationStyle(
             Icons.Default.Refresh, GymeDivider, GymeTextSecondary, null, Color.Transparent, Color.Transparent
@@ -353,7 +355,7 @@ fun EmptyNotificationsState() {
         Spacer(modifier = Modifier.height(32.dp))
         
         Text(
-            text = "You're all caught up",
+            text = stringResource(R.string.caught_up_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = GymeTextPrimary
@@ -362,7 +364,7 @@ fun EmptyNotificationsState() {
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "No new notifications to show right now.\nEnjoy your focused workflow.",
+            text = stringResource(R.string.caught_up_subtitle),
             fontSize = 15.sp,
             color = GymeTextSecondary,
             textAlign = TextAlign.Center,

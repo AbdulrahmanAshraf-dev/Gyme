@@ -23,7 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.gyme.R
 import com.example.gyme.core.model.StaffStats
 import com.example.gyme.core.model.StaffMember
 import com.example.gyme.theme.*
@@ -64,7 +66,7 @@ fun StaffScreen(
                 contentColor = Color.White,
                 shape = CircleShape
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Staff")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_staff))
             }
         }
     ) { paddingValues ->
@@ -80,11 +82,11 @@ fun StaffScreen(
                                 // Instead of retry, if it's a permission error, suggest login
                                 viewModel.loadStaffData() 
                             }, colors = ButtonDefaults.buttonColors(containerColor = GymePrimary)) {
-                                Text("Retry")
+                                Text(stringResource(R.string.retry))
                             }
                             Spacer(modifier = Modifier.width(12.dp))
                             OutlinedButton(onClick = { onNavigateToHome() }) {
-                                Text("Login as Admin")
+                                Text(stringResource(R.string.login_as_admin))
                             }
                         }
                     }
@@ -161,7 +163,7 @@ fun StaffHeader() {
                 Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.padding(6.dp), tint = GymeButtonText)
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Text("Gym Manager", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = GymeTextPrimary)
+            Text(stringResource(R.string.gym_manager), fontWeight = FontWeight.Bold, fontSize = 16.sp, color = GymeTextPrimary)
         }
         IconButton(onClick = { /*TODO*/ }) {
             Icon(Icons.Outlined.Notifications, contentDescription = null, tint = GymeTextPrimary)
@@ -172,10 +174,10 @@ fun StaffHeader() {
 @Composable
 fun StaffPageHeader() {
     Column {
-        Text("Staff Management", fontWeight = FontWeight.ExtraBold, fontSize = 32.sp, color = GymeTextPrimary)
+        Text(stringResource(R.string.staff_management_title), fontWeight = FontWeight.ExtraBold, fontSize = 32.sp, color = GymeTextPrimary)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            "Oversee team roles, adjust system access levels, and monitor key performance indicators across your facility.",
+            stringResource(R.string.staff_management_subtitle),
             fontSize = 14.sp, color = GymeTextSecondary, lineHeight = 20.sp
         )
     }
@@ -191,7 +193,7 @@ fun AddMemberButton() {
     ) {
         Icon(Icons.Default.PersonAdd, contentDescription = null, modifier = Modifier.size(18.dp))
         Spacer(modifier = Modifier.width(8.dp))
-        Text("ADD MEMBER", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+        Text(stringResource(R.string.add_member), fontWeight = FontWeight.Bold, fontSize = 12.sp)
     }
 }
 
@@ -199,7 +201,7 @@ fun AddMemberButton() {
 fun StaffStatsSection(stats: StaffStats) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         GymeStatCard(
-            title = "TOTAL ACTIVE STAFF",
+            title = stringResource(R.string.total_active_staff),
             value = stats.totalActiveStaff.toString(),
             subtext = stats.growthText,
             isPositive = true,
@@ -208,18 +210,18 @@ fun StaffStatsSection(stats: StaffStats) {
             iconColor = GymePrimary
         )
         GymeStatCard(
-            title = "ON SHIFT NOW",
+            title = stringResource(R.string.on_shift_now),
             value = stats.onShiftNow.toString(),
-            subtext = "Active sessions",
+            subtext = stringResource(R.string.active_sessions_label),
             isPositive = null,
             icon = Icons.Outlined.WatchLater,
             iconBgColor = Color(0xFFEAF7F2),
             iconColor = GymePrimary
         )
         GymeStatCard(
-            title = "PENDING REQUESTS",
+            title = stringResource(R.string.pending_requests),
             value = stats.pendingRequests.toString(),
-            subtext = "Requires review",
+            subtext = stringResource(R.string.requires_review_label),
             isPositive = null,
             icon = Icons.Outlined.WorkOutline,
             iconBgColor = Color(0xFFF3F4F6),
@@ -245,7 +247,7 @@ fun TopTrainerCard(trainer: StaffMember) {
             )
             
             Column(modifier = Modifier.padding(20.dp)) {
-                Text("TOP PERFORMING TRAINER", color = Color.White.copy(alpha = 0.7f), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.top_performing_trainer), color = Color.White.copy(alpha = 0.7f), fontSize = 10.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Surface(shape = CircleShape, border = androidx.compose.foundation.BorderStroke(2.dp, GymePrimary), modifier = Modifier.size(56.dp)) {
@@ -257,7 +259,7 @@ fun TopTrainerCard(trainer: StaffMember) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.StarBorder, contentDescription = null, tint = GymePrimary, modifier = Modifier.size(14.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("${trainer.rating} Avg Rating", color = GymePrimary, fontSize = 12.sp)
+                            Text(stringResource(R.string.avg_rating, trainer.rating), color = GymePrimary, fontSize = 12.sp)
                         }
                     }
                 }
@@ -273,7 +275,7 @@ fun StaffSearchBar() {
         value = "",
         onValueChange = {},
         modifier = Modifier.fillMaxWidth().height(56.dp).clip(RoundedCornerShape(12.dp)),
-        placeholder = { Text("Search staff by name or role...", color = GymeTextSecondary, fontSize = 14.sp) },
+        placeholder = { Text(stringResource(R.string.search_staff_placeholder), color = GymeTextSecondary, fontSize = 14.sp) },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = GymeTextSecondary) },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = GymeDivider,
@@ -289,10 +291,10 @@ fun StaffSearchBar() {
 fun FilterSortSection() {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Surface(shape = RoundedCornerShape(8.dp), color = GymeDivider) {
-            Text("FILTER", modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextPrimary)
+            Text(stringResource(R.string.filter_label), modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextPrimary)
         }
         Surface(shape = RoundedCornerShape(8.dp), color = GymeDivider) {
-            Text("SORT: ROLE", modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextPrimary)
+            Text(stringResource(R.string.sort_role_label), modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), fontSize = 12.sp, fontWeight = FontWeight.Bold, color = GymeTextPrimary)
         }
     }
 }
@@ -339,12 +341,12 @@ fun StaffListItem(
             
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                 Column {
-                    Text("System Access", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = if (staff.isAccessEnabled) GymeTextPrimary else Color.Red)
-                    Text(if (staff.isAccessEnabled) "Account is Active" else "Account is Blocked", fontSize = 12.sp, color = GymeTextSecondary)
+                    Text(stringResource(R.string.system_access), fontWeight = FontWeight.Bold, fontSize = 14.sp, color = if (staff.isAccessEnabled) GymeTextPrimary else Color.Red)
+                    Text(if (staff.isAccessEnabled) stringResource(R.string.account_active) else stringResource(R.string.account_blocked), fontSize = 12.sp, color = GymeTextSecondary)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = { onDeleteStaff(staff.id) }) {
-                        Icon(Icons.Default.DeleteOutline, contentDescription = "Delete", tint = Color.Red.copy(alpha = 0.6f))
+                        Icon(Icons.Default.DeleteOutline, contentDescription = stringResource(R.string.delete), tint = Color.Red.copy(alpha = 0.6f))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Switch(
@@ -362,29 +364,29 @@ fun StaffListItem(
             
             if (staff.isAccessEnabled) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Permissions", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = GymeTextPrimary)
+                Text(stringResource(R.string.permissions), fontWeight = FontWeight.Bold, fontSize = 14.sp, color = GymeTextPrimary)
                 Spacer(modifier = Modifier.height(12.dp))
                 
                 PermissionToggle(
-                    title = "Add Members",
+                    title = stringResource(R.string.add_members_perm),
                     icon = Icons.Default.PersonAdd,
                     isEnabled = staff.canAddMember,
                     onToggle = { onTogglePermission(staff.id, "add", it) }
                 )
                 PermissionToggle(
-                    title = "Edit Members",
+                    title = stringResource(R.string.edit_members_perm),
                     icon = Icons.Default.Edit,
                     isEnabled = staff.canEditMember,
                     onToggle = { onTogglePermission(staff.id, "edit", it) }
                 )
                 PermissionToggle(
-                    title = "Delete Members",
+                    title = stringResource(R.string.delete_members_perm),
                     icon = Icons.Default.Delete,
                     isEnabled = staff.canDeleteMember,
                     onToggle = { onTogglePermission(staff.id, "delete", it) }
                 )
                 PermissionToggle(
-                    title = "Manage Finance",
+                    title = stringResource(R.string.manage_finance_perm),
                     icon = Icons.Default.Payments,
                     isEnabled = staff.canManageFinance,
                     onToggle = { onTogglePermission(staff.id, "finance", it) }
@@ -456,25 +458,25 @@ fun AddStaffForm(
             .padding(24.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text("Create Staff Account", fontWeight = FontWeight.ExtraBold, fontSize = 26.sp, color = Color.Black)
-        Text("Enter details and set permissions for the new staff member.", fontSize = 14.sp, color = Color(0xFF4B5563))
+        Text(stringResource(R.string.create_staff_account), fontWeight = FontWeight.ExtraBold, fontSize = 26.sp, color = Color.Black)
+        Text(stringResource(R.string.create_staff_subtitle), fontSize = 14.sp, color = Color(0xFF4B5563))
         
         Spacer(modifier = Modifier.height(32.dp))
         
-        GymeAddStaffField(label = "Full Name", value = name, onValueChange = { name = it }, icon = Icons.Default.Person)
+        GymeAddStaffField(label = stringResource(R.string.full_name), value = name, onValueChange = { name = it }, icon = Icons.Default.Person)
         Spacer(modifier = Modifier.height(20.dp))
-        GymeAddStaffField(label = "Email Address", value = email, onValueChange = { email = it }, icon = Icons.Default.Email)
+        GymeAddStaffField(label = stringResource(R.string.email_address), value = email, onValueChange = { email = it }, icon = Icons.Default.Email)
         Spacer(modifier = Modifier.height(20.dp))
-        GymeAddStaffField(label = "Password", value = password, onValueChange = { password = it }, icon = Icons.Default.Lock, isPassword = true)
+        GymeAddStaffField(label = stringResource(R.string.password), value = password, onValueChange = { password = it }, icon = Icons.Default.Lock, isPassword = true)
         
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Initial Permissions", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.Black)
+        Text(stringResource(R.string.initial_permissions), fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.Black)
         Spacer(modifier = Modifier.height(16.dp))
         
-        PermissionToggle(title = "Add Members", icon = Icons.Default.PersonAdd, isEnabled = canAdd, onToggle = { canAdd = it })
-        PermissionToggle(title = "Edit Members", icon = Icons.Default.Edit, isEnabled = canEdit, onToggle = { canEdit = it })
-        PermissionToggle(title = "Delete Members", icon = Icons.Default.Delete, isEnabled = canDelete, onToggle = { canDelete = it })
-        PermissionToggle(title = "Manage Finance", icon = Icons.Default.Payments, isEnabled = canFinance, onToggle = { canFinance = it })
+        PermissionToggle(title = stringResource(R.string.add_members_perm), icon = Icons.Default.PersonAdd, isEnabled = canAdd, onToggle = { canAdd = it })
+        PermissionToggle(title = stringResource(R.string.edit_members_perm), icon = Icons.Default.Edit, isEnabled = canEdit, onToggle = { canEdit = it })
+        PermissionToggle(title = stringResource(R.string.delete_members_perm), icon = Icons.Default.Delete, isEnabled = canDelete, onToggle = { canDelete = it })
+        PermissionToggle(title = stringResource(R.string.manage_finance_perm), icon = Icons.Default.Payments, isEnabled = canFinance, onToggle = { canFinance = it })
         
         Spacer(modifier = Modifier.height(32.dp))
         
@@ -497,13 +499,13 @@ fun AddStaffForm(
             ),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(stringResource(R.string.create_account), fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
         
         Spacer(modifier = Modifier.height(12.dp))
         
         TextButton(onClick = onCancel, modifier = Modifier.fillMaxWidth()) {
-            Text("Cancel", color = GymeTextSecondary, fontWeight = FontWeight.Medium)
+            Text(stringResource(R.string.cancel), color = GymeTextSecondary, fontWeight = FontWeight.Medium)
         }
         
         Spacer(modifier = Modifier.height(24.dp))

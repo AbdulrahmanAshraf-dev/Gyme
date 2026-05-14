@@ -21,8 +21,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.gyme.R
 import com.example.gyme.core.model.DashboardStats
 import com.example.gyme.theme.*
 import com.example.gyme.core.ui.GymeBottomNavigation
@@ -90,7 +92,7 @@ fun HomeScreen(
                             onClick = { viewModel.loadDashboardData() },
                             colors = ButtonDefaults.buttonColors(containerColor = GymePrimary)
                         ) {
-                            Text("Retry", color = Color.White)
+                            Text(stringResource(R.string.retry_action), color = Color.White)
                         }
                     }
                 }
@@ -136,12 +138,12 @@ fun DashboardContent(
                     }
                     showDatePicker = false
                 }) {
-                    Text("OK", color = GymePrimary)
+                    Text(stringResource(R.string.ok), color = GymePrimary)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             },
             colors = DatePickerDefaults.colors(containerColor = Color.White)
@@ -175,7 +177,7 @@ fun DashboardContent(
                 IconButton(onClick = { showDatePicker = true }) {
                     Icon(
                         imageVector = Icons.Default.CalendarToday,
-                        contentDescription = "Change Date",
+                        contentDescription = stringResource(R.string.change_date),
                         tint = GymePrimary
                     )
                 }
@@ -226,7 +228,7 @@ fun HomeHeader(userName: String, onNavigateToNotifications: () -> Unit = {}) {
         IconButton(onClick = onNavigateToNotifications) {
             Icon(
                 imageVector = Icons.Outlined.Notifications,
-                contentDescription = "Notifications",
+                contentDescription = stringResource(R.string.notifications_desc),
                 tint = GymeTextPrimary
             )
         }
@@ -235,10 +237,10 @@ fun HomeHeader(userName: String, onNavigateToNotifications: () -> Unit = {}) {
 
 @Composable
 fun HomeGreeting(userName: String) {
-    Text(text = "Overview", color = GymeTextSecondary, fontSize = 16.sp)
+    Text(text = stringResource(R.string.overview), color = GymeTextSecondary, fontSize = 16.sp)
     Spacer(modifier = Modifier.height(4.dp))
     Text(
-        text = "Good Morning,\n$userName",
+        text = stringResource(R.string.good_morning_greeting, userName),
         color = GymeTextPrimary,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 32.sp,
@@ -262,9 +264,9 @@ fun HomeQuickActions(
             modifier = Modifier.weight(1f).height(48.dp),
             contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
-            Icon(Icons.Default.Add, contentDescription = "New Member", modifier = Modifier.size(18.dp))
+            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text("NEW MEMBER", fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 0.5.sp)
+            Text(stringResource(R.string.new_member_action), fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 0.5.sp)
         }
         Spacer(modifier = Modifier.width(12.dp))
         Button(
@@ -277,9 +279,9 @@ fun HomeQuickActions(
             modifier = Modifier.weight(1f).height(48.dp),
             contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
-            Icon(Icons.Default.QrCodeScanner, contentDescription = "Scan ID", modifier = Modifier.size(18.dp))
+            Icon(Icons.Default.QrCodeScanner, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text("SCAN ID", fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 0.5.sp)
+            Text(stringResource(R.string.scan_id_action), fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 0.5.sp)
         }
     }
 }
@@ -302,7 +304,7 @@ fun RevenueCard(stats: DashboardStats) {
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Today's Revenue", color = GymeTextSecondary, fontSize = 14.sp)
+                Text(stringResource(R.string.today_revenue_label), color = GymeTextSecondary, fontSize = 14.sp)
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Default.MoreVert,
@@ -336,7 +338,7 @@ fun RevenueCard(stats: DashboardStats) {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "vs. same day last week (${CurrencyUtils.formatEGP(stats.previousRevenue)})",
+                text = stringResource(R.string.vs_last_week, CurrencyUtils.formatEGP(stats.previousRevenue)),
                 color = GymeTextSecondary,
                 fontSize = 14.sp
             )
@@ -360,7 +362,7 @@ fun ActiveAttendanceCard(stats: DashboardStats) {
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Currently Active", color = Color(0xFF9CA3AF), fontSize = 14.sp)
+                Text(stringResource(R.string.currently_active_label), color = Color(0xFF9CA3AF), fontSize = 14.sp)
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
@@ -389,7 +391,7 @@ fun ActiveAttendanceCard(stats: DashboardStats) {
             
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "${stats.capacityPercentage}% of daily average capacity",
+                text = stringResource(R.string.capacity_description, stats.capacityPercentage),
                 color = Color(0xFF9CA3AF),
                 fontSize = 14.sp
             )
@@ -407,18 +409,18 @@ fun MemberStatusCard(stats: DashboardStats) {
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("Member Status", color = GymeTextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text("VIEW ALL", color = GymeTextSecondary, fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 0.5.sp)
+                Text(stringResource(R.string.member_status_label), color = GymeTextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(stringResource(R.string.view_all), color = GymeTextSecondary, fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 0.5.sp)
             }
             Spacer(modifier = Modifier.height(24.dp))
             
-            StatusRow("Active Members", "${stats.totalActiveMembers}", GymePrimary)
+            StatusRow(stringResource(R.string.active_members_label), "${stats.totalActiveMembers}", GymePrimary)
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), color = GymeDivider)
             
-            StatusRow("Expiring < 7 Days", "${stats.expiringSoonMembers}", GymeOrangeDot)
+            StatusRow(stringResource(R.string.expiring_soon_label), "${stats.expiringSoonMembers}", GymeOrangeDot)
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), color = GymeDivider)
             
-            StatusRow("Expired This Month", "${stats.expiredMembers}", GymeTextSecondary)
+            StatusRow(stringResource(R.string.expired_month_label), "${stats.expiredMembers}", GymeTextSecondary)
         }
     }
 }

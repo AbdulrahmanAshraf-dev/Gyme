@@ -34,7 +34,37 @@
     <string name="appearance">Appearance</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="notifications">Notifications Center</string>
-    <string name="staff_management">Staff Management</string>
+    <string name="staff_management_title">Staff Management</string>
+    <string name="staff_management_subtitle">Oversee team roles, adjust system access levels, and monitor key performance indicators across your facility.</string>
+    <string name="add_staff">Add Staff</string>
+    <string name="create_staff_account">Create Staff Account</string>
+    <string name="create_staff_subtitle">Enter details and set permissions for the new staff member.</string>
+    <string name="total_active_staff">TOTAL ACTIVE STAFF</string>
+    <string name="on_shift_now">ON SHIFT NOW</string>
+    <string name="active_sessions_label">Active sessions</string>
+    <string name="requires_review_label">Requires review</string>
+    <string name="pending_requests">PENDING REQUESTS</string>
+    <string name="filter_label">Filter</string>
+    <string name="sort_role_label">Sort: Role</string>
+    <string name="top_performing_trainer">TOP PERFORMING TRAINER</string>
+    <string name="search_staff_placeholder">Search staff by name or role...</string>
+    <string name="avg_rating">%1$s Avg Rating</string>
+    <string name="system_access">System Access</string>
+    <string name="account_active">Account is Active</string>
+    <string name="account_blocked">Account is Blocked</string>
+    <string name="permissions">Permissions</string>
+    <string name="add_members_perm">Add Members</string>
+    <string name="edit_members_perm">Edit Members</string>
+    <string name="delete_members_perm">Delete Members</string>
+    <string name="manage_finance_perm">Manage Finance</string>
+    <string name="create_account">Create Account</string>
+    <string name="full_name">Full Name</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="initial_permissions">Initial Permissions</string>
+    <string name="delete">Delete</string>
+    <string name="gym_manager">Gym Manager</string>
+    <string name="login_as_admin">Login as Admin</string>
     <string name="help_support">Help &amp; Support</string>
     <string name="logout">Logout</string>
 
@@ -46,8 +76,166 @@
     <string name="welcome_back">Welcome back, %1$s!</string>
     <string name="subscription_expired">Subscription Expired</string>
     <string name="renewal_required">Member needs renewal at front desk.</string>
+    <string name="error_checkin_failed">Check-in failed</string>
+    <string name="error_member_not_found">Member not found</string>
 
-    <!-- Empty States -->
+    <!-- Members -->
+    <string name="add_member">ADD MEMBER</string>
+    <string name="filter">FILTER</string>
+    <string name="sort_role">SORT: ROLE</string>
+    <string name="filter_active_only">Active Only</string>
+    <string name="filter_vip_plan">VIP Plan</string>
+    <string name="filter_all">All Members</string>
+    <string name="stat_total_active">TOTAL ACTIVE</string>
+    <string name="stat_pending_activation">PENDING ACTIVATION</string>
+    <string name="stat_recently_expired">RECENTLY EXPIRED</string>
+    <string name="search_members_placeholder">Search members by name or ID...</string>
+    <string name="manage_member_status">Manage Member Status</string>
+    <string name="plan_details">Plan Details</string>
+    <string name="action_renew">Renew</string>
+    <string name="action_freeze">Freeze</string>
+    <string name="action_activate">Activate</string>
+    <string name="action_block">Block</string>
+    <string name="member_management">Member Management</string>
+    <string name="member_management_subtitle">Track your community, manage subscriptions, and monitor attendance growth effectively.</string>
+    <string name="recently_added">Recently Added</string>
+    <string name="attendance_growth">Attendance Growth</string>
+    <string name="member_roster">Member Roster</string>
+    <string name="member_roster_subtitle">Manage memberships, track statuses, and maintain your facility\'s operational precision.</string>
+    <string name="logo">Logo</string>
+    <string name="notifications_desc">Notifications</string>
+    <string name="renew_membership">Renew Membership</string>
+    <string name="unfreeze_account">Unfreeze Account</string>
+    <string name="unblock_member">Unblock Member</string>
+    <string name="freeze_account">Freeze Account</string>
+    <string name="block_member">Block Member</string>
+    <string name="status_active">ACTIVE</string>
+    <string name="status_pending">PENDING</string>
+    <string name="status_expired">EXPIRED</string>
+    <string name="status_frozen">FROZEN</string>
+    <string name="status_blocked">BLOCKED</string>
+    <string name="status_unknown">UNKNOWN</string>
+
+    <!-- Home -->
+    <string name="overview">Overview</string>
+    <string name="change_date">Change Date</string>
+    <string name="new_member_action">NEW MEMBER</string>
+    <string name="scan_id_action">SCAN ID</string>
+    <string name="today_revenue_label">Today\'s Revenue</string>
+    <string name="vs_last_week">vs. same day last week (%1$s)</string>
+    <string name="currently_active_label">Currently Active</string>
+    <string name="capacity_description">%1$s%% of daily average capacity</string>
+    <string name="member_status_label">Member Status</string>
+    <string name="active_members_label">Active Members</string>
+    <string name="expiring_soon_label">Expiring &lt; 7 Days</string>
+    <string name="expired_month_label">Expired This Month</string>
+    <string name="good_morning_greeting">Good Morning,\n%1$s</string>
+    <string name="ok">OK</string>
+    <string name="manage_plans">Manage Plans</string>
+    <string name="membership_plans">Membership Plans</string>
+    <string name="gym_services">Gym Services</string>
+    <string name="gym_settings">Gym Settings</string>
+    <string name="attendance_qr_code">Attendance QR Code</string>
+
+    <!-- Login -->
+    <string name="welcome_back_title">Welcome back</string>
+    <string name="login_subtitle">Sign in to access your facility dashboard.</string>
+    <string name="email_label">EMAIL ADDRESS</string>
+    <string name="password_label">PASSWORD</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="sign_in_action">SIGN IN</string>
+    <string name="toggle_password">Toggle password</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Precision.</string>
+    <string name="onboarding_subtitle">The silent partner for elite fitness operators. Manage everything in one flawless view.</string>
+    <string name="feature_dashboard_title">Unified Dashboard</string>
+    <string name="feature_dashboard_desc">Monitor attendance, revenue, and active members instantly.</string>
+    <string name="feature_access_title">Frictionless Access</string>
+    <string name="feature_access_desc">Lightning-fast QR check-ins to keep your lobby flowing.</string>
+    <string name="get_started_action">GET STARTED</string>
+
+    <!-- Add Member -->
+    <string name="add_member_title">Add Member</string>
+    <string name="personal_info_section">Personal Information</string>
+    <string name="full_name_label">FULL NAME</string>
+    <string name="phone_number_label">PHONE NUMBER</string>
+    <string name="gender_label">GENDER</string>
+    <string name="sub_start_label">SUBSCRIPTION START</string>
+    <string name="sub_end_label">SUBSCRIPTION END</string>
+    <string name="subscription_section">Subscription</string>
+    <string name="unpaid_badge">UNPAID</string>
+    <string name="add_member_hint">Fill out the information below to register\na new member to the gym.</string>
+    <string name="select_plan_label">SELECT PLAN</string>
+    <string name="select_plan_title">Select Membership Plan</string>
+    <string name="payment_summary_title">Payment Summary</string>
+    <string name="subtotal_label">Subtotal</string>
+    <string name="discount_label">Discount</string>
+    <string name="amount_paid_label">Amount Paid</string>
+    <string name="total_due_label">Total Due</string>
+    <string name="enter_amount_hint">Enter Amount</string>
+    <string name="debt_label">Debt: %1$s</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="select_plan_hint">Select a membership plan...</string>
+    <string name="add_photo">Add member photo</string>
+    <string name="new_member_badge">NEW MEMBER</string>
+
+    <!-- Update Member -->
+    <string name="update_member_title">Update Member</string>
+    <string name="save_changes_action">Save Changes</string>
+    <string name="sessions_this_month">Sessions this Month</string>
+    <string name="admin_actions_section">Admin Actions</string>
+    <string name="membership_details_section">Membership Details</string>
+    <string name="current_plan_label">Current Plan</string>
+    <string name="select_plan_dropdown">Select a plan</string>
+    <string name="fitness_goals_label">Primary Fitness Goals</string>
+    <string name="add_goal_action">Add Goal</string>
+    <string name="payment_history_section">Payment History</string>
+    <string name="view_full_history">View Full History</string>
+    <string name="paid_status">Paid</string>
+    <string name="verified_desc">Verified</string>
+    <string name="avatar_desc">Member Avatar</string>
+    <string name="retry_action">Retry</string>
+    <string name="requires_action_label">Requires action</string>
+    <string name="past_7_days_label">Past 7 days</string>
+
+    <!-- Finance -->
+    <string name="finance_title">Financial Overview</string>
+    <string name="finance_subtitle">Track monthly revenue, manage expenses, and approve staff requests.</string>
+    <string name="total_revenue_label">TOTAL REVENUE</string>
+    <string name="total_expenses_label">TOTAL EXPENSES</string>
+    <string name="net_profit_label">NET PROFIT</string>
+    <string name="revenue_trend_title">Revenue Trend</string>
+    <string name="weekly_filter">Weekly</string>
+    <string name="monthly_filter">Monthly</string>
+    <string name="pending_approvals_title">Pending Approvals</string>
+    <string name="view_all_requests_action">VIEW ALL REQUESTS</string>
+    <string name="approve_action">Approve</string>
+    <string name="review_action">Review</string>
+    <string name="new_requests_badge">%1$s NEW</string>
+
+    <!-- Plans -->
+    <string name="plans_title">Plans</string>
+    <string name="add_plan_action">Add Plan</string>
+    <string name="edit_plan_title">Edit Plan</string>
+    <string name="plan_name_label">Plan Name</string>
+    <string name="complete_amount_label">Complete Amount</string>
+    <string name="duration_label">Duration</string>
+    <string name="duration_months_text">%1$s Months</string>
+    <string name="price_egp_label">Price (EGP)</string>
+    <string name="duration_months_label">Duration (Months)</string>
+    <string name="confirm_action">Confirm</string>
+    <string name="delete_plan">Delete Plan</string>
+
+    <!-- Notifications -->
+    <string name="notification_center_title">Notification Center</string>
+    <string name="end_of_history">END OF HISTORY</string>
+    <string name="filter_unread">Unread</string>
+    <string name="badge_action_required">Action Required</string>
+    <string name="badge_billing">Billing</string>
     <string name="caught_up_title">You\'re all caught up</string>
     <string name="caught_up_subtitle">No new notifications to show right now.\nEnjoy your focused workflow.</string>
+    <string name="profile_desc">Profile</string>
+
 </resources>

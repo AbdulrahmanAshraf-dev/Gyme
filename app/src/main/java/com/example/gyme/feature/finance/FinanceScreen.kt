@@ -26,6 +26,8 @@ import com.example.gyme.core.ui.GymeBottomNavigation
 import com.example.gyme.core.ui.GymeBottomTab
 import com.example.gyme.core.ui.GymeStatCard
 import com.example.gyme.util.CurrencyUtils
+import androidx.compose.ui.res.stringResource
+import com.example.gyme.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,7 +133,7 @@ fun FinanceHeader() {
             }
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Gym Manager",
+                text = stringResource(R.string.gym_manager),
                 color = GymeTextPrimary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
@@ -140,7 +142,7 @@ fun FinanceHeader() {
         IconButton(onClick = { /*TODO*/ }) {
             Icon(
                 imageVector = Icons.Outlined.Notifications,
-                contentDescription = "Notifications",
+                contentDescription = stringResource(R.string.notifications_desc),
                 tint = GymeTextPrimary
             )
         }
@@ -151,7 +153,7 @@ fun FinanceHeader() {
 fun PageHeader(currentMonth: String) {
     Column {
         Text(
-            text = "Financial Overview",
+            text = stringResource(R.string.finance_title),
             color = GymeTextPrimary,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 32.sp,
@@ -159,7 +161,7 @@ fun PageHeader(currentMonth: String) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Track monthly revenue, manage expenses, and approve staff requests.",
+            text = stringResource(R.string.finance_subtitle),
             color = GymeTextSecondary,
             fontSize = 14.sp,
             lineHeight = 20.sp
@@ -190,7 +192,7 @@ fun KpiCardsList(stats: FinancialStats) {
     
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         GymeStatCard(
-            title = "TOTAL REVENUE",
+            title = stringResource(R.string.total_revenue_label),
             value = CurrencyUtils.formatEGP(stats.totalRevenue),
             subtext = stats.revenueTrend,
             isPositive = stats.isRevenuePositive,
@@ -199,7 +201,7 @@ fun KpiCardsList(stats: FinancialStats) {
             iconColor = GymePrimary
         )
         GymeStatCard(
-            title = "TOTAL EXPENSES",
+            title = stringResource(R.string.total_expenses_label),
             value = CurrencyUtils.formatEGP(stats.totalExpenses),
             subtext = stats.expensesTrend,
             isPositive = null, 
@@ -208,7 +210,7 @@ fun KpiCardsList(stats: FinancialStats) {
             iconColor = Color(0xFF4B5563)
         )
         GymeStatCard(
-            title = "NET PROFIT",
+            title = stringResource(R.string.net_profit_label),
             value = CurrencyUtils.formatEGP(stats.netProfit),
             subtext = stats.netProfitTrend,
             isPositive = stats.isNetProfitPositive,
@@ -229,7 +231,7 @@ fun RevenueTrendWidget(stats: FinancialStats) {
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Revenue Trend", color = GymeTextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(text = stringResource(R.string.revenue_trend_title), color = GymeTextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 
                 Surface(
                     color = GymeDivider,
@@ -237,7 +239,7 @@ fun RevenueTrendWidget(stats: FinancialStats) {
                 ) {
                     Row(modifier = Modifier.padding(4.dp)) {
                         Text(
-                            text = "Weekly",
+                            text = stringResource(R.string.weekly_filter),
                             color = GymeTextSecondary,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
@@ -248,7 +250,7 @@ fun RevenueTrendWidget(stats: FinancialStats) {
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Text(
-                                text = "Monthly",
+                                text = stringResource(R.string.monthly_filter),
                                 color = Color.White,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -345,14 +347,14 @@ fun PendingApprovalsWidget(
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Pending Approvals", color = GymeTextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(text = stringResource(R.string.pending_approvals_title), color = GymeTextPrimary, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 
                 Surface(
                     color = Color(0xFFFEE2E2),
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
-                        text = "${requests.size} NEW",
+                        text = stringResource(R.string.new_requests_badge, requests.size),
                         color = Color(0xFFDC2626),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
@@ -370,7 +372,7 @@ fun PendingApprovalsWidget(
             
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "VIEW ALL REQUESTS",
+                text = stringResource(R.string.view_all_requests_action),
                 color = GymeTextSecondary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
@@ -429,7 +431,7 @@ fun ExpenseRequestCard(
                     modifier = Modifier.weight(1f).height(40.dp),
                     contentPadding = PaddingValues(0.dp)
                 ) {
-                    Text("Approve", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                    Text(stringResource(R.string.approve_action), fontWeight = FontWeight.Bold, fontSize = 12.sp)
                 }
                 
                 OutlinedButton(
@@ -440,7 +442,7 @@ fun ExpenseRequestCard(
                     border = androidx.compose.foundation.BorderStroke(1.dp, GymeDivider),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = GymeTextPrimary)
                 ) {
-                    Text("Review", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                    Text(stringResource(R.string.review_action), fontWeight = FontWeight.Bold, fontSize = 12.sp)
                 }
             }
         }
